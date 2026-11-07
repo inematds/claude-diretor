@@ -1,6 +1,6 @@
 {
  "id": "jato",
- "duracion": 46.727,
+ "duracion": 47.256,
  "voz": "nei",
  "pausa": 0.22,
  "bloques": [
@@ -12,42 +12,42 @@
   {
    "id": "b1",
    "inicio": 2.36,
-   "fin": 11.27
+   "fin": 11.799
   },
   {
    "id": "b2",
-   "inicio": 11.67,
-   "fin": 17.254
+   "inicio": 12.199,
+   "fin": 17.782
   },
   {
    "id": "b3",
-   "inicio": 17.654,
-   "fin": 22.931
+   "inicio": 18.182,
+   "fin": 23.46
   },
   {
    "id": "b4",
-   "inicio": 23.331,
-   "fin": 26.408
+   "inicio": 23.86,
+   "fin": 26.937
   },
   {
    "id": "b5",
-   "inicio": 26.808,
-   "fin": 33.588
+   "inicio": 27.337,
+   "fin": 34.117
   },
   {
    "id": "b6",
-   "inicio": 33.988,
-   "fin": 38.308
+   "inicio": 34.517,
+   "fin": 38.837
   },
   {
    "id": "b7",
-   "inicio": 38.708,
-   "fin": 43.128
+   "inicio": 39.237,
+   "fin": 43.657
   },
   {
    "id": "b8",
-   "inicio": 43.528,
-   "fin": 46.728
+   "inicio": 44.057,
+   "fin": 47.257
   }
  ],
  "frases": [
@@ -61,58 +61,58 @@
   {
    "id": "fan",
    "bloque": "b1",
-   "texto": "Na frente, um ventilador gigante. No maior motor de avião comercial, ele é mais largo que um Boeing setecentos e trinta e sete.",
+   "texto": "Na frente, um ventilador gigante. No maior motor de avião comercial, ele é mais largo que a fuselagem de um Boeing setecentos e trinta e sete.",
    "inicio": 2.36,
-   "fin": 11.26
+   "fin": 11.789
   },
   {
    "id": "bypass",
    "bloque": "b2",
    "texto": "A maior parte do ar passa por fora: cerca de dez vezes mais do que entra no núcleo.",
-   "inicio": 11.67,
-   "fin": 17.15
+   "inicio": 12.199,
+   "fin": 17.679
   },
   {
    "id": "compressor",
    "bloque": "b3",
    "texto": "O resto é espremido, estágio por estágio, até sessenta vezes a pressão.",
-   "inicio": 17.654,
-   "fin": 22.754
+   "inicio": 18.182,
+   "fin": 23.282
   },
   {
    "id": "combustao",
    "bloque": "b4",
    "texto": "Aí, o combustível queima nesse ar apertado.",
-   "inicio": 23.331,
-   "fin": 26.231
+   "inicio": 23.86,
+   "fin": 26.76
   },
   {
    "id": "turbina",
    "bloque": "b5",
    "texto": "O gás quente gira a turbina, e ela gira o compressor e o ventilador por dois eixos, um dentro do outro.",
-   "inicio": 26.808,
-   "fin": 33.408
+   "inicio": 27.337,
+   "fin": 33.937
   },
   {
    "id": "bocal",
    "bloque": "b6",
    "texto": "No bocal, o gás sai rápido, e o avião é empurrado para a frente.",
-   "inicio": 33.988,
-   "fin": 38.128
+   "inicio": 34.517,
+   "fin": 38.657
   },
   {
    "id": "pecas",
    "bloque": "b7",
    "texto": "Aspira, comprime, queima e sopra. Peça por peça.",
-   "inicio": 38.708,
-   "fin": 42.948
+   "inicio": 39.237,
+   "fin": 43.477
   },
   {
    "id": "volta",
    "bloque": "b8",
    "texto": "Como funciona por dentro. Tem mais no INEMA.CLUB.",
-   "inicio": 43.528,
-   "fin": 46.548
+   "inicio": 44.057,
+   "fin": 47.077
   }
  ],
  "palabras": [
@@ -155,667 +155,685 @@
   {
    "texto": "Na",
    "inicio": 2.36,
-   "fin": 2.5,
+   "fin": 2.46,
    "frase": "fan"
   },
   {
    "texto": "frente,",
-   "inicio": 2.5,
-   "fin": 2.98,
+   "inicio": 2.46,
+   "fin": 2.92,
    "frase": "fan"
   },
   {
    "texto": "um",
-   "inicio": 3.1,
-   "fin": 3.5,
+   "inicio": 3.06,
+   "fin": 3.3,
    "frase": "fan"
   },
   {
    "texto": "ventilador",
-   "inicio": 3.5,
-   "fin": 4.16,
+   "inicio": 3.3,
+   "fin": 3.98,
    "frase": "fan"
   },
   {
    "texto": "gigante.",
-   "inicio": 4.16,
-   "fin": 4.9,
+   "inicio": 3.98,
+   "fin": 4.68,
    "frase": "fan"
   },
   {
    "texto": "No",
-   "inicio": 5.02,
-   "fin": 5.46,
+   "inicio": 4.86,
+   "fin": 5.4,
    "frase": "fan"
   },
   {
    "texto": "maior",
-   "inicio": 5.46,
-   "fin": 5.74,
+   "inicio": 5.4,
+   "fin": 5.66,
    "frase": "fan"
   },
   {
    "texto": "motor",
-   "inicio": 5.74,
-   "fin": 6.08,
+   "inicio": 5.66,
+   "fin": 6.02,
    "frase": "fan"
   },
   {
    "texto": "de",
-   "inicio": 6.08,
-   "fin": 6.34,
+   "inicio": 6.02,
+   "fin": 6.26,
    "frase": "fan"
   },
   {
    "texto": "avião",
-   "inicio": 6.34,
-   "fin": 6.62,
+   "inicio": 6.26,
+   "fin": 6.58,
    "frase": "fan"
   },
   {
    "texto": "comercial,",
-   "inicio": 6.62,
-   "fin": 6.9,
+   "inicio": 6.58,
+   "fin": 6.86,
    "frase": "fan"
   },
   {
    "texto": "ele",
-   "inicio": 7.42,
-   "fin": 7.86,
+   "inicio": 7.32,
+   "fin": 7.68,
    "frase": "fan"
   },
   {
    "texto": "é",
-   "inicio": 7.86,
-   "fin": 7.98,
+   "inicio": 7.68,
+   "fin": 7.82,
    "frase": "fan"
   },
   {
    "texto": "mais",
-   "inicio": 7.98,
-   "fin": 8.16,
+   "inicio": 7.82,
+   "fin": 8.04,
    "frase": "fan"
   },
   {
    "texto": "largo",
-   "inicio": 8.16,
-   "fin": 8.62,
+   "inicio": 8.04,
+   "fin": 8.38,
    "frase": "fan"
   },
   {
    "texto": "que",
-   "inicio": 8.62,
-   "fin": 8.86,
+   "inicio": 8.38,
+   "fin": 8.66,
    "frase": "fan"
   },
   {
-   "texto": "um",
-   "inicio": 8.86,
-   "fin": 9.0,
+   "texto": "a",
+   "inicio": 8.66,
+   "fin": 8.74,
    "frase": "fan"
   },
   {
-   "texto": "Boeing",
-   "inicio": 9.0,
+   "texto": "fuselagem",
+   "inicio": 8.74,
    "fin": 9.28,
    "frase": "fan"
   },
   {
+   "texto": "de",
+   "inicio": 9.28,
+   "fin": 9.44,
+   "frase": "fan"
+  },
+  {
+   "texto": "um",
+   "inicio": 9.44,
+   "fin": 9.52,
+   "frase": "fan"
+  },
+  {
+   "texto": "Boeing",
+   "inicio": 9.52,
+   "fin": 9.78,
+   "frase": "fan"
+  },
+  {
    "texto": "setecentos",
-   "inicio": 9.29,
-   "fin": 9.668,
+   "inicio": 9.79,
+   "fin": 10.174,
    "frase": "fan"
   },
   {
    "texto": "e",
-   "inicio": 9.688,
-   "fin": 10.066,
+   "inicio": 10.194,
+   "fin": 10.578,
    "frase": "fan"
   },
   {
    "texto": "trinta",
-   "inicio": 10.086,
-   "fin": 10.464,
+   "inicio": 10.598,
+   "fin": 10.981,
    "frase": "fan"
   },
   {
    "texto": "e",
-   "inicio": 10.484,
-   "fin": 10.862,
+   "inicio": 11.001,
+   "fin": 11.385,
    "frase": "fan"
   },
   {
    "texto": "sete.",
-   "inicio": 10.882,
-   "fin": 11.26,
+   "inicio": 11.405,
+   "fin": 11.789,
    "frase": "fan"
   },
   {
    "texto": "A",
-   "inicio": 11.67,
-   "fin": 11.77,
+   "inicio": 12.199,
+   "fin": 12.299,
    "frase": "bypass"
   },
   {
    "texto": "maior",
-   "inicio": 11.77,
-   "fin": 12.01,
+   "inicio": 12.299,
+   "fin": 12.539,
    "frase": "bypass"
   },
   {
    "texto": "parte",
-   "inicio": 12.01,
-   "fin": 12.47,
+   "inicio": 12.539,
+   "fin": 12.999,
    "frase": "bypass"
   },
   {
    "texto": "do",
-   "inicio": 12.47,
-   "fin": 12.69,
+   "inicio": 12.999,
+   "fin": 13.219,
    "frase": "bypass"
   },
   {
    "texto": "ar",
-   "inicio": 12.69,
-   "fin": 12.93,
+   "inicio": 13.219,
+   "fin": 13.459,
    "frase": "bypass"
   },
   {
    "texto": "passa",
-   "inicio": 12.93,
-   "fin": 13.35,
+   "inicio": 13.459,
+   "fin": 13.879,
    "frase": "bypass"
   },
   {
    "texto": "por",
-   "inicio": 13.35,
-   "fin": 13.65,
+   "inicio": 13.879,
+   "fin": 14.179,
    "frase": "bypass"
   },
   {
    "texto": "fora:",
-   "inicio": 13.65,
-   "fin": 14.11,
+   "inicio": 14.179,
+   "fin": 14.639,
    "frase": "bypass"
   },
   {
    "texto": "cerca",
-   "inicio": 14.17,
-   "fin": 14.77,
+   "inicio": 14.699,
+   "fin": 15.299,
    "frase": "bypass"
   },
   {
    "texto": "de",
-   "inicio": 14.77,
-   "fin": 14.99,
+   "inicio": 15.299,
+   "fin": 15.519,
    "frase": "bypass"
   },
   {
    "texto": "dez",
-   "inicio": 15.0,
-   "fin": 15.22,
+   "inicio": 15.529,
+   "fin": 15.749,
    "frase": "bypass"
   },
   {
    "texto": "vezes",
-   "inicio": 15.23,
-   "fin": 15.51,
+   "inicio": 15.759,
+   "fin": 16.039,
    "frase": "bypass"
   },
   {
    "texto": "mais",
-   "inicio": 15.51,
-   "fin": 15.93,
+   "inicio": 16.039,
+   "fin": 16.459,
    "frase": "bypass"
   },
   {
    "texto": "do",
-   "inicio": 15.93,
-   "fin": 16.11,
+   "inicio": 16.459,
+   "fin": 16.639,
    "frase": "bypass"
   },
   {
    "texto": "que",
-   "inicio": 16.11,
-   "fin": 16.25,
+   "inicio": 16.639,
+   "fin": 16.779,
    "frase": "bypass"
   },
   {
    "texto": "entra",
-   "inicio": 16.25,
-   "fin": 16.51,
+   "inicio": 16.779,
+   "fin": 17.039,
    "frase": "bypass"
   },
   {
    "texto": "no",
-   "inicio": 16.51,
-   "fin": 16.71,
+   "inicio": 17.039,
+   "fin": 17.239,
    "frase": "bypass"
   },
   {
    "texto": "núcleo.",
-   "inicio": 16.71,
-   "fin": 17.15,
+   "inicio": 17.239,
+   "fin": 17.679,
    "frase": "bypass"
   },
   {
    "texto": "O",
-   "inicio": 17.654,
-   "fin": 17.754,
+   "inicio": 18.182,
+   "fin": 18.282,
    "frase": "compressor"
   },
   {
    "texto": "resto",
-   "inicio": 17.754,
-   "fin": 18.134,
+   "inicio": 18.282,
+   "fin": 18.662,
    "frase": "compressor"
   },
   {
    "texto": "é",
-   "inicio": 18.134,
-   "fin": 18.334,
+   "inicio": 18.662,
+   "fin": 18.862,
    "frase": "compressor"
   },
   {
    "texto": "espremido,",
-   "inicio": 18.334,
-   "fin": 19.014,
+   "inicio": 18.862,
+   "fin": 19.542,
    "frase": "compressor"
   },
   {
    "texto": "estágio",
-   "inicio": 19.074,
-   "fin": 19.814,
+   "inicio": 19.602,
+   "fin": 20.342,
    "frase": "compressor"
   },
   {
    "texto": "por",
-   "inicio": 19.814,
-   "fin": 19.974,
+   "inicio": 20.342,
+   "fin": 20.502,
    "frase": "compressor"
   },
   {
    "texto": "estágio,",
-   "inicio": 19.974,
-   "fin": 20.614,
+   "inicio": 20.502,
+   "fin": 21.142,
    "frase": "compressor"
   },
   {
    "texto": "até",
-   "inicio": 20.614,
-   "fin": 21.114,
+   "inicio": 21.142,
+   "fin": 21.642,
    "frase": "compressor"
   },
   {
    "texto": "sessenta",
-   "inicio": 21.124,
-   "fin": 21.564,
+   "inicio": 21.652,
+   "fin": 22.092,
    "frase": "compressor"
   },
   {
    "texto": "vezes",
-   "inicio": 21.574,
-   "fin": 22.014,
+   "inicio": 22.102,
+   "fin": 22.542,
    "frase": "compressor"
   },
   {
    "texto": "a",
-   "inicio": 22.014,
-   "fin": 22.294,
+   "inicio": 22.542,
+   "fin": 22.822,
    "frase": "compressor"
   },
   {
    "texto": "pressão.",
-   "inicio": 22.294,
-   "fin": 22.754,
+   "inicio": 22.822,
+   "fin": 23.282,
    "frase": "compressor"
   },
   {
    "texto": "Aí,",
-   "inicio": 23.331,
-   "fin": 23.531,
+   "inicio": 23.86,
+   "fin": 24.06,
    "frase": "combustao"
   },
   {
    "texto": "o",
-   "inicio": 23.671,
-   "fin": 23.931,
+   "inicio": 24.2,
+   "fin": 24.46,
    "frase": "combustao"
   },
   {
    "texto": "combustível",
-   "inicio": 23.931,
-   "fin": 24.671,
+   "inicio": 24.46,
+   "fin": 25.2,
    "frase": "combustao"
   },
   {
    "texto": "queima",
-   "inicio": 24.671,
-   "fin": 25.171,
+   "inicio": 25.2,
+   "fin": 25.7,
    "frase": "combustao"
   },
   {
    "texto": "nesse",
-   "inicio": 25.171,
-   "fin": 25.311,
+   "inicio": 25.7,
+   "fin": 25.84,
    "frase": "combustao"
   },
   {
    "texto": "ar",
-   "inicio": 25.311,
-   "fin": 25.591,
+   "inicio": 25.84,
+   "fin": 26.12,
    "frase": "combustao"
   },
   {
    "texto": "apertado.",
-   "inicio": 25.591,
-   "fin": 26.231,
+   "inicio": 26.12,
+   "fin": 26.76,
    "frase": "combustao"
   },
   {
    "texto": "O",
-   "inicio": 26.808,
-   "fin": 26.908,
+   "inicio": 27.337,
+   "fin": 27.437,
    "frase": "turbina"
   },
   {
    "texto": "gás",
-   "inicio": 26.908,
-   "fin": 27.208,
+   "inicio": 27.437,
+   "fin": 27.737,
    "frase": "turbina"
   },
   {
    "texto": "quente",
-   "inicio": 27.208,
-   "fin": 27.608,
+   "inicio": 27.737,
+   "fin": 28.137,
    "frase": "turbina"
   },
   {
    "texto": "gira",
-   "inicio": 27.608,
-   "fin": 28.008,
+   "inicio": 28.137,
+   "fin": 28.537,
    "frase": "turbina"
   },
   {
    "texto": "a",
-   "inicio": 28.008,
-   "fin": 28.088,
+   "inicio": 28.537,
+   "fin": 28.617,
    "frase": "turbina"
   },
   {
    "texto": "turbina,",
-   "inicio": 28.028,
-   "fin": 28.628,
+   "inicio": 28.557,
+   "fin": 29.157,
    "frase": "turbina"
   },
   {
    "texto": "e",
-   "inicio": 28.628,
-   "fin": 29.008,
+   "inicio": 29.157,
+   "fin": 29.537,
    "frase": "turbina"
   },
   {
    "texto": "ela",
-   "inicio": 29.008,
-   "fin": 29.268,
+   "inicio": 29.537,
+   "fin": 29.797,
    "frase": "turbina"
   },
   {
    "texto": "gira",
-   "inicio": 29.268,
-   "fin": 29.608,
+   "inicio": 29.797,
+   "fin": 30.137,
    "frase": "turbina"
   },
   {
    "texto": "o",
-   "inicio": 29.608,
-   "fin": 29.688,
+   "inicio": 30.137,
+   "fin": 30.217,
    "frase": "turbina"
   },
   {
    "texto": "compressor",
-   "inicio": 29.648,
-   "fin": 30.048,
+   "inicio": 30.177,
+   "fin": 30.577,
    "frase": "turbina"
   },
   {
    "texto": "e",
-   "inicio": 30.048,
-   "fin": 30.448,
+   "inicio": 30.577,
+   "fin": 30.977,
    "frase": "turbina"
   },
   {
    "texto": "o",
-   "inicio": 30.448,
-   "fin": 30.528,
+   "inicio": 30.977,
+   "fin": 31.057,
    "frase": "turbina"
   },
   {
    "texto": "ventilador",
-   "inicio": 30.508,
-   "fin": 31.108,
+   "inicio": 31.037,
+   "fin": 31.637,
    "frase": "turbina"
   },
   {
    "texto": "por",
-   "inicio": 31.108,
-   "fin": 31.408,
+   "inicio": 31.637,
+   "fin": 31.937,
    "frase": "turbina"
   },
   {
    "texto": "dois",
-   "inicio": 31.408,
-   "fin": 31.608,
+   "inicio": 31.937,
+   "fin": 32.137,
    "frase": "turbina"
   },
   {
    "texto": "eixos,",
-   "inicio": 31.608,
-   "fin": 32.228,
+   "inicio": 32.137,
+   "fin": 32.757,
    "frase": "turbina"
   },
   {
    "texto": "um",
-   "inicio": 32.228,
-   "fin": 32.628,
+   "inicio": 32.757,
+   "fin": 33.157,
    "frase": "turbina"
   },
   {
    "texto": "dentro",
-   "inicio": 32.628,
-   "fin": 32.948,
+   "inicio": 33.157,
+   "fin": 33.477,
    "frase": "turbina"
   },
   {
    "texto": "do",
-   "inicio": 32.948,
-   "fin": 33.208,
+   "inicio": 33.477,
+   "fin": 33.737,
    "frase": "turbina"
   },
   {
    "texto": "outro.",
-   "inicio": 33.208,
-   "fin": 33.408,
+   "inicio": 33.737,
+   "fin": 33.937,
    "frase": "turbina"
   },
   {
    "texto": "No",
-   "inicio": 33.988,
-   "fin": 34.128,
+   "inicio": 34.517,
+   "fin": 34.657,
    "frase": "bocal"
   },
   {
    "texto": "bocal,",
-   "inicio": 34.128,
-   "fin": 34.688,
+   "inicio": 34.657,
+   "fin": 35.217,
    "frase": "bocal"
   },
   {
    "texto": "o",
-   "inicio": 34.728,
-   "fin": 35.068,
+   "inicio": 35.257,
+   "fin": 35.597,
    "frase": "bocal"
   },
   {
    "texto": "gás",
-   "inicio": 35.068,
-   "fin": 35.388,
+   "inicio": 35.597,
+   "fin": 35.917,
    "frase": "bocal"
   },
   {
    "texto": "sai",
-   "inicio": 35.388,
-   "fin": 35.588,
+   "inicio": 35.917,
+   "fin": 36.117,
    "frase": "bocal"
   },
   {
    "texto": "rápido,",
-   "inicio": 35.588,
-   "fin": 36.008,
+   "inicio": 36.117,
+   "fin": 36.537,
    "frase": "bocal"
   },
   {
    "texto": "e",
-   "inicio": 36.008,
-   "fin": 36.528,
+   "inicio": 36.537,
+   "fin": 37.057,
    "frase": "bocal"
   },
   {
    "texto": "o",
-   "inicio": 36.528,
-   "fin": 36.688,
+   "inicio": 37.057,
+   "fin": 37.217,
    "frase": "bocal"
   },
   {
    "texto": "avião",
-   "inicio": 36.688,
-   "fin": 37.108,
+   "inicio": 37.217,
+   "fin": 37.637,
    "frase": "bocal"
   },
   {
    "texto": "é",
-   "inicio": 37.108,
-   "fin": 37.188,
+   "inicio": 37.637,
+   "fin": 37.717,
    "frase": "bocal"
   },
   {
    "texto": "empurrado",
-   "inicio": 37.168,
-   "fin": 37.588,
+   "inicio": 37.697,
+   "fin": 38.117,
    "frase": "bocal"
   },
   {
    "texto": "para",
-   "inicio": 37.588,
-   "fin": 37.808,
+   "inicio": 38.117,
+   "fin": 38.337,
    "frase": "bocal"
   },
   {
    "texto": "a",
-   "inicio": 37.818,
-   "fin": 37.898,
+   "inicio": 38.347,
+   "fin": 38.427,
    "frase": "bocal"
   },
   {
    "texto": "frente.",
-   "inicio": 37.808,
-   "fin": 38.128,
+   "inicio": 38.337,
+   "fin": 38.657,
    "frase": "bocal"
   },
   {
    "texto": "Aspira,",
-   "inicio": 38.708,
-   "fin": 39.308,
+   "inicio": 39.237,
+   "fin": 39.837,
    "frase": "pecas"
   },
   {
    "texto": "comprime,",
-   "inicio": 39.368,
-   "fin": 40.348,
+   "inicio": 39.897,
+   "fin": 40.877,
    "frase": "pecas"
   },
   {
    "texto": "queima",
-   "inicio": 40.408,
-   "fin": 41.088,
+   "inicio": 40.937,
+   "fin": 41.617,
    "frase": "pecas"
   },
   {
    "texto": "e",
-   "inicio": 41.088,
-   "fin": 41.248,
+   "inicio": 41.617,
+   "fin": 41.777,
    "frase": "pecas"
   },
   {
    "texto": "sopra.",
-   "inicio": 41.248,
-   "fin": 41.768,
+   "inicio": 41.777,
+   "fin": 42.297,
    "frase": "pecas"
   },
   {
    "texto": "Peça",
-   "inicio": 41.828,
-   "fin": 42.348,
+   "inicio": 42.357,
+   "fin": 42.877,
    "frase": "pecas"
   },
   {
    "texto": "por",
-   "inicio": 42.348,
-   "fin": 42.528,
+   "inicio": 42.877,
+   "fin": 43.057,
    "frase": "pecas"
   },
   {
    "texto": "peça.",
-   "inicio": 42.528,
-   "fin": 42.948,
+   "inicio": 43.057,
+   "fin": 43.477,
    "frase": "pecas"
   },
   {
    "texto": "Como",
-   "inicio": 43.528,
-   "fin": 43.849,
+   "inicio": 44.057,
+   "fin": 44.378,
    "frase": "volta"
   },
   {
    "texto": "funciona",
-   "inicio": 43.849,
-   "fin": 44.428,
+   "inicio": 44.378,
+   "fin": 44.956,
    "frase": "volta"
   },
   {
    "texto": "por",
-   "inicio": 44.428,
-   "fin": 44.685,
+   "inicio": 44.956,
+   "fin": 45.213,
    "frase": "volta"
   },
   {
    "texto": "dentro.",
-   "inicio": 44.685,
-   "fin": 45.135,
+   "inicio": 45.213,
+   "fin": 45.663,
    "frase": "volta"
   },
   {
    "texto": "Tem",
-   "inicio": 45.135,
-   "fin": 45.392,
+   "inicio": 45.663,
+   "fin": 45.92,
    "frase": "volta"
   },
   {
    "texto": "mais",
-   "inicio": 45.392,
-   "fin": 45.713,
+   "inicio": 45.92,
+   "fin": 46.241,
    "frase": "volta"
   },
   {
    "texto": "no",
-   "inicio": 45.713,
-   "fin": 45.906,
+   "inicio": 46.241,
+   "fin": 46.434,
    "frase": "volta"
   },
   {
    "texto": "INEMA.CLUB.",
-   "inicio": 45.906,
-   "fin": 46.548,
+   "inicio": 46.434,
+   "fin": 47.077,
    "frase": "volta"
   }
  ]

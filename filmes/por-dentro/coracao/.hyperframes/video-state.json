@@ -1,0 +1,887 @@
+{
+  "version": 1,
+  "historyId": "8a8d70aa-b644-4989-ba31-3cc7e5b72540",
+  "currentRevision": "364ade78-9173-4d2c-817b-aa0f4b3b5876",
+  "pendingChanges": false,
+  "files": {
+    "fatos.md": {
+      "hash": "067291ebac3f53a09da109b9f38e99d7ca19bb7836ce0f015e771d9f9fe23708",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/06/067291ebac3f53a09da109b9f38e99d7ca19bb7836ce0f015e771d9f9fe23708"
+    },
+    "hyperframes.json": {
+      "hash": "006873838b07dedbb572cc65cc6e53b9b94e4b9cf3bfe797db7a807b7a22cb34",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/00/006873838b07dedbb572cc65cc6e53b9b94e4b9cf3bfe797db7a807b7a22cb34"
+    },
+    "index.html": {
+      "hash": "138a0abd77bd0f58c3b8924e67f6dd104491ca11bd77e7c68f5252c01f977266",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/13/138a0abd77bd0f58c3b8924e67f6dd104491ca11bd77e7c68f5252c01f977266"
+    },
+    "js/RoomEnvironment.js": {
+      "hash": "55f466192cc84298755a424c5e040345006b2ee1455589b3b54126c2ea4123f4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/55/55f466192cc84298755a424c5e040345006b2ee1455589b3b54126c2ea4123f4"
+    },
+    "js/mundo.js": {
+      "hash": "bc421474af0068fa28c386317d887790255600b9e62e83eef3e89b5721027e5b",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bc/bc421474af0068fa28c386317d887790255600b9e62e83eef3e89b5721027e5b"
+    },
+    "js/oficina.js": {
+      "hash": "bb9d9ba3bfbb672933ff7f582f35fbfdf66fc849015786aa6e0118f1295a542a",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bb/bb9d9ba3bfbb672933ff7f582f35fbfdf66fc849015786aa6e0118f1295a542a"
+    },
+    "js/por-dentro.css": {
+      "hash": "8f843e3c1239a69d7acffaca2f5f40d410b2b2d7139e665bb402f63da2460551",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/8f/8f843e3c1239a69d7acffaca2f5f40d410b2b2d7139e665bb402f63da2460551"
+    },
+    "js/tempos.js": {
+      "hash": "740d04bf9efc7c802f94e31c1e27d38a1cf66e257299d049363a3fa64406507e",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/74/740d04bf9efc7c802f94e31c1e27d38a1cf66e257299d049363a3fa64406507e"
+    },
+    "motor/base.js": {
+      "hash": "94326138a67aca9963973f934de7de6184ccca51ceef82fce343ec817ddb3f8b",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/94/94326138a67aca9963973f934de7de6184ccca51ceef82fce343ec817ddb3f8b"
+    },
+    "motor/fontes/Inter-Bold.ttf": {
+      "hash": "288316099b1e0a47a4716d159098005eef7c0066921f34e3200393dbdb01947f",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/28/288316099b1e0a47a4716d159098005eef7c0066921f34e3200393dbdb01947f"
+    },
+    "motor/fontes/Inter-Regular.ttf": {
+      "hash": "40d692fce188e4471e2b3cba937be967878f631ad3ebbbdcd587687c7ebe0c82",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/40/40d692fce188e4471e2b3cba937be967878f631ad3ebbbdcd587687c7ebe0c82"
+    },
+    "motor/fontes/JetBrainsMono-Bold.ttf": {
+      "hash": "a2349098b9e45419e7bf0e2958d6c4937a049dded37387b08be725be4c7615f3",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a2/a2349098b9e45419e7bf0e2958d6c4937a049dded37387b08be725be4c7615f3"
+    },
+    "motor/fontes/Montserrat-Black.ttf": {
+      "hash": "ea67b37f8776eebea135cd1fe9adeaf6f9427683e8dc11ab8398b6be5f102c60",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/ea/ea67b37f8776eebea135cd1fe9adeaf6f9427683e8dc11ab8398b6be5f102c60"
+    },
+    "motor/fontes/OFL.txt": {
+      "hash": "1dd7ead146f08a1db22836f6f337070da5dd9d93234729610b6ccf414e0f2c50",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/1d/1dd7ead146f08a1db22836f6f337070da5dd9d93234729610b6ccf414e0f2c50"
+    },
+    "motor/fontes/Sora.ttf": {
+      "hash": "84ff7096ae3ec6c8be47d906d1a0ba4de7f2ce78c615275c77301964a316e16c",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/84/84ff7096ae3ec6c8be47d906d1a0ba4de7f2ce78c615275c77301964a316e16c"
+    },
+    "motor/lib/LICENSE-three.js.txt": {
+      "hash": "700f9a46d59f7de06d344f98f82458c4e45c5251f4665a4464129d8e61eed496",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/70/700f9a46d59f7de06d344f98f82458c4e45c5251f4665a4464129d8e61eed496"
+    },
+    "motor/lib/three.core.min.js": {
+      "hash": "295a28f4a9786dd24a2a357a4ce90921eb041127e53a508335b9a0556c1e0875",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/29/295a28f4a9786dd24a2a357a4ce90921eb041127e53a508335b9a0556c1e0875"
+    },
+    "motor/lib/three.module.min.js": {
+      "hash": "979c1ae4b0579c9901eacf797602c0b46df129d87102c6443d14be4a1f790b70",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/97/979c1ae4b0579c9901eacf797602c0b46df129d87102c6443d14be4a1f790b70"
+    },
+    "motor/reel.css": {
+      "hash": "842d71fe756dcf5e0850d406b55d7477ce89f6d9f4444a4913b8fb5eccc62586",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/84/842d71fe756dcf5e0850d406b55d7477ce89f6d9f4444a4913b8fb5eccc62586"
+    },
+    "motor/terra.js": {
+      "hash": "72d19df4b3ab13eaf8c7a401e5e95febd1dafb5cf04b2ef700d903f8787e69a4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/72/72d19df4b3ab13eaf8c7a401e5e95febd1dafb5cf04b2ef700d903f8787e69a4"
+    },
+    "package.json": {
+      "hash": "5855b09feb7c2212744e8fe4829b07cc4441d595050a2b20634676ba8933f7fe",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/58/5855b09feb7c2212744e8fe4829b07cc4441d595050a2b20634676ba8933f7fe"
+    },
+    "roteiro.json": {
+      "hash": "5fe2aa64d28af97ffd136979a1f19df318265547544dc73a6f456ea560275fc2",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/5f/5fe2aa64d28af97ffd136979a1f19df318265547544dc73a6f456ea560275fc2"
+    },
+    "voz/coracao/cache/azul-71e5b3c49b68.json": {
+      "hash": "1cc57bea8ff5fda538fdda2a75ed70b3a94322850db46ba9efa60440a573e233",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/1c/1cc57bea8ff5fda538fdda2a75ed70b3a94322850db46ba9efa60440a573e233"
+    },
+    "voz/coracao/cache/azul-71e5b3c49b68.wav": {
+      "hash": "b84dea51ad2ac8fd9b14925f363c1048feb2bcdfd77b8fc39b5ca5f0bad76d73",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/b8/b84dea51ad2ac8fd9b14925f363c1048feb2bcdfd77b8fc39b5ca5f0bad76d73"
+    },
+    "voz/coracao/cache/batidas-29dd7f32f32a.json": {
+      "hash": "6b9abd78f76a3a4efacd0e340cb1863a2f5828b53044922c073a1eef8c85ce65",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/6b/6b9abd78f76a3a4efacd0e340cb1863a2f5828b53044922c073a1eef8c85ce65"
+    },
+    "voz/coracao/cache/batidas-29dd7f32f32a.wav": {
+      "hash": "276990b680d010b72866f316501337a1261a1f4d0ad2bb929bc5ae4fceeecf13",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/27/276990b680d010b72866f316501337a1261a1f4d0ad2bb929bc5ae4fceeecf13"
+    },
+    "voz/coracao/cache/camaras-24d14c58d2e3.json": {
+      "hash": "60c9501ce3deecbff060b25ef782754da47e66d2f14743859aa90b583dece9fe",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/60/60c9501ce3deecbff060b25ef782754da47e66d2f14743859aa90b583dece9fe"
+    },
+    "voz/coracao/cache/camaras-24d14c58d2e3.wav": {
+      "hash": "6702ec8f10022fc9e959e2e35a46f6688be9fa6ff265eec2576b34641647c00d",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/67/6702ec8f10022fc9e959e2e35a46f6688be9fa6ff265eec2576b34641647c00d"
+    },
+    "voz/coracao/cache/pecas-030a4d8bdd14.json": {
+      "hash": "cdb1a48c12efacfea14f005258d33cfbc64a69c1bd116957bb64bae65ac73cf4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/cd/cdb1a48c12efacfea14f005258d33cfbc64a69c1bd116957bb64bae65ac73cf4"
+    },
+    "voz/coracao/cache/pecas-030a4d8bdd14.wav": {
+      "hash": "561c8addfc94df6c3bf5ca95fca19c0b12808d69121f8079b4c949cd106abf27",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/56/561c8addfc94df6c3bf5ca95fca19c0b12808d69121f8079b4c949cd106abf27"
+    },
+    "voz/coracao/cache/sinal-0dcea68dac98.json": {
+      "hash": "751ff12f3cf6e44264b093e309b719d4783da8b2450ab68d0cb453e861fe7f16",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/75/751ff12f3cf6e44264b093e309b719d4783da8b2450ab68d0cb453e861fe7f16"
+    },
+    "voz/coracao/cache/sinal-0dcea68dac98.wav": {
+      "hash": "80b3536cb2a916c77f311bdef0cc89a8f655002ad75a18cb7056bc7749e86cc9",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/80/80b3536cb2a916c77f311bdef0cc89a8f655002ad75a18cb7056bc7749e86cc9"
+    },
+    "voz/coracao/cache/titulo-87a1ac9a9775.json": {
+      "hash": "6e9f5b98293499b1a00700aa807133bb35514e5674803e69350d3c220b2ed223",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/6e/6e9f5b98293499b1a00700aa807133bb35514e5674803e69350d3c220b2ed223"
+    },
+    "voz/coracao/cache/titulo-87a1ac9a9775.wav": {
+      "hash": "81d5dd361ab03141329eabf6558589bd0cb8f4649fd87b94dc5c161426e9dd3b",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/81/81d5dd361ab03141329eabf6558589bd0cb8f4649fd87b94dc5c161426e9dd3b"
+    },
+    "voz/coracao/cache/valvulas-16a4b021d29f.json": {
+      "hash": "71dbaec0fde0e346df67c300e2d5e5fbb40ca25315fb9f32eb5323c5cf04ed94",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/71/71dbaec0fde0e346df67c300e2d5e5fbb40ca25315fb9f32eb5323c5cf04ed94"
+    },
+    "voz/coracao/cache/valvulas-16a4b021d29f.wav": {
+      "hash": "6c75a874b371f2b22e456498a7bf173c5bbf5345bb2aca661b3e9ff7c377445c",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/6c/6c75a874b371f2b22e456498a7bf173c5bbf5345bb2aca661b3e9ff7c377445c"
+    },
+    "voz/coracao/cache/vermelho-3bde3447d113.json": {
+      "hash": "fb7a37c6f7ac7f70617d8649d3a481d64f30afe800c945cac2cb019fda1d9c30",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/fb/fb7a37c6f7ac7f70617d8649d3a481d64f30afe800c945cac2cb019fda1d9c30"
+    },
+    "voz/coracao/cache/vermelho-3bde3447d113.wav": {
+      "hash": "e5dfe4b359579be2acd54d26498e722338bdbd052adfc670330a6765864b3b2c",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/e5/e5dfe4b359579be2acd54d26498e722338bdbd052adfc670330a6765864b3b2c"
+    },
+    "voz/coracao/cache/volta-8d3c47950412.json": {
+      "hash": "84985e9940fc48016e4fda2907eaab6fc938a4cb1558e923a0f4e3d4e799f18d",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/84/84985e9940fc48016e4fda2907eaab6fc938a4cb1558e923a0f4e3d4e799f18d"
+    },
+    "voz/coracao/cache/volta-8d3c47950412.wav": {
+      "hash": "a174ff2dbd4ad0ae395d6fd2e764ece6e24073a54228ccf42b13fd16c2f61536",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a1/a174ff2dbd4ad0ae395d6fd2e764ece6e24073a54228ccf42b13fd16c2f61536"
+    },
+    "voz/coracao/tiempos.js": {
+      "hash": "780f5fa6e4fff55c12db47a16cb17a5e3f9d6a3294a621316daeb9d7a92cac35",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/78/780f5fa6e4fff55c12db47a16cb17a5e3f9d6a3294a621316daeb9d7a92cac35"
+    },
+    "voz/coracao/tiempos.json": {
+      "hash": "7bd8b5e5b96589ccfd1ad51688bd80c2549a9887eb386caa80a94c6dd93a272e",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/7b/7bd8b5e5b96589ccfd1ad51688bd80c2549a9887eb386caa80a94c6dd93a272e"
+    },
+    "voz.log": {
+      "hash": "be1a491c36d19ba2bddbd365b1acb7e4568db2ef0dca4de904770a5924f77ff5",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/be/be1a491c36d19ba2bddbd365b1acb7e4568db2ef0dca4de904770a5924f77ff5"
+    },
+    "audio/coracao/final.wav": {
+      "hash": "71d67614bd1356b32359a40e86e83ddcefdfd739fce14c81cd77298fd97766e8",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/71/71d67614bd1356b32359a40e86e83ddcefdfd739fce14c81cd77298fd97766e8"
+    },
+    "audio/coracao/mezcla.wav": {
+      "hash": "9a98ddbf56dbddbd32b8d68f476fa6bc4ec08e31f5482eeb53c52820270a5971",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/9a/9a98ddbf56dbddbd32b8d68f476fa6bc4ec08e31f5482eeb53c52820270a5971"
+    },
+    "voz/coracao/voz.wav": {
+      "hash": "6e129af4cc473dc20747080087e43f0ef25dab7091db605ca550edbad6182543",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/6e/6e129af4cc473dc20747080087e43f0ef25dab7091db605ca550edbad6182543"
+    },
+    "stills/contact-sheet-1.jpg": {
+      "hash": "742a939aaa0907606ef467a3e2f9d0fe1e22aacdf6d95c804725f0a721bf3952",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/74/742a939aaa0907606ef467a3e2f9d0fe1e22aacdf6d95c804725f0a721bf3952"
+    },
+    "stills/contact-sheet-2.jpg": {
+      "hash": "d959ceaa6176828fed11a600e53b0464f705d8f44b9094229c1c0095fef0c50b",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/d9/d959ceaa6176828fed11a600e53b0464f705d8f44b9094229c1c0095fef0c50b"
+    },
+    "stills/frame-00-at-0s.png": {
+      "hash": "525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/52/525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4"
+    },
+    "stills/frame-01-at-4s.png": {
+      "hash": "50a55b91179897751fedccd93e930b9a6fe95f905ba33fcc3370dbafe58ccb47",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/50/50a55b91179897751fedccd93e930b9a6fe95f905ba33fcc3370dbafe58ccb47"
+    },
+    "stills/frame-02-at-8.5s.png": {
+      "hash": "e01d8f5be249c5ede1e5ed2b55357ef0bd485cda4079552cdd6604b3a03c11a3",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/e0/e01d8f5be249c5ede1e5ed2b55357ef0bd485cda4079552cdd6604b3a03c11a3"
+    },
+    "stills/frame-03-at-13s.png": {
+      "hash": "a5f67bbee8769ada53005c6a2f5be3501ef79db9053e31ae07486204018f846d",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a5/a5f67bbee8769ada53005c6a2f5be3501ef79db9053e31ae07486204018f846d"
+    },
+    "stills/frame-04-at-17.5s.png": {
+      "hash": "3ae3c6f38f6eedbde569faba52362fcdce0c581c57abd5d909ab5a22ef9d07c4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/3a/3ae3c6f38f6eedbde569faba52362fcdce0c581c57abd5d909ab5a22ef9d07c4"
+    },
+    "stills/frame-05-at-22s.png": {
+      "hash": "3cfd8b5d72eb88fd417dd3071cf2677a69478ce9deaf0a893bf3f848c2cf3ec1",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/3c/3cfd8b5d72eb88fd417dd3071cf2677a69478ce9deaf0a893bf3f848c2cf3ec1"
+    },
+    "stills/frame-06-at-28s.png": {
+      "hash": "20b56da196646fa9726ea8f529b6fe740ad8604a5f3103b4ffcb0aed04d0ab10",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/20/20b56da196646fa9726ea8f529b6fe740ad8604a5f3103b4ffcb0aed04d0ab10"
+    },
+    "stills/frame-07-at-33s.png": {
+      "hash": "bdfc5c93d014f3c780e6b2e42f49ae08d1d3d576fa09428b36776745357de74f",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bd/bdfc5c93d014f3c780e6b2e42f49ae08d1d3d576fa09428b36776745357de74f"
+    },
+    "stills/frame-08-at-37.5s.png": {
+      "hash": "262d8d7fd6ee84b7de508ead2d27a3d0c29d977f0827b7c364865e570d2a95aa",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/26/262d8d7fd6ee84b7de508ead2d27a3d0c29d977f0827b7c364865e570d2a95aa"
+    },
+    "stills/frame-09-at-44.5s.png": {
+      "hash": "525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/52/525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4"
+    },
+    "stills2/contact-sheet.jpg": {
+      "hash": "11302c081ead49e6d8dda9b625b53d53ed217c32dc78217ce5f0159531766410",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/11/11302c081ead49e6d8dda9b625b53d53ed217c32dc78217ce5f0159531766410"
+    },
+    "stills2/frame-00-at-0s.png": {
+      "hash": "cb5c193ea9dd42f8e239ad3685fbf28b3fb41108deac715cbb283910519ea06a",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/cb/cb5c193ea9dd42f8e239ad3685fbf28b3fb41108deac715cbb283910519ea06a"
+    },
+    "stills2/frame-01-at-13s.png": {
+      "hash": "a557cb781402fcbc1302129c6b435ea7a77ba618b4e074097fda6dd501806b6c",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a5/a557cb781402fcbc1302129c6b435ea7a77ba618b4e074097fda6dd501806b6c"
+    },
+    "stills2/frame-02-at-24s.png": {
+      "hash": "64ae9725f05925bb0dbde3084e1cc6804c03e66782b23830c129db353a73326c",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/64/64ae9725f05925bb0dbde3084e1cc6804c03e66782b23830c129db353a73326c"
+    },
+    "stills2/frame-03-at-37.5s.png": {
+      "hash": "edbd3afe9ac82d86a8374c624cf0cac0f101c5466446d444fa15b95b8f958b91",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/ed/edbd3afe9ac82d86a8374c624cf0cac0f101c5466446d444fa15b95b8f958b91"
+    },
+    "stills3/frame-00-at-13s.png": {
+      "hash": "2b601afb265a7b44df1f9d35a6fa7bb6fca58cb18e79d8629633f80fd416fa53",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/2b/2b601afb265a7b44df1f9d35a6fa7bb6fca58cb18e79d8629633f80fd416fa53"
+    },
+    "stills3/frame-01-at-28s.png": {
+      "hash": "88bb5433a2fbf4cf76b3419ec5574107e857632c2d1c0f77bdca2701a742e897",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/88/88bb5433a2fbf4cf76b3419ec5574107e857632c2d1c0f77bdca2701a742e897"
+    },
+    "stills3/frame-02-at-33s.png": {
+      "hash": "51238f74a16e6e15875d293687d61ae9cb6ddbfc0d2386e5cd6499fdd41a4979",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/51/51238f74a16e6e15875d293687d61ae9cb6ddbfc0d2386e5cd6499fdd41a4979"
+    },
+    "stills3/frame-03-at-37.8s.png": {
+      "hash": "bf3068b1f814a233fb25b593647cc8c5e28e47be2743c8f4a3774f6e88298523",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bf/bf3068b1f814a233fb25b593647cc8c5e28e47be2743c8f4a3774f6e88298523"
+    },
+    "stills3/contact-sheet.jpg": {
+      "hash": "a085f7dc30e78904432c2844886ec36fa7dcdb2ec13f842e1c626b7a5af1ae0b",
+      "content": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a0/a085f7dc30e78904432c2844886ec36fa7dcdb2ec13f842e1c626b7a5af1ae0b"
+    }
+  },
+  "revisions": {
+    "76ab6c28-28c4-48e4-8734-bc5038ec2582": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794066248369,
+      "endedAt": 1794066248376,
+      "files": {
+        "js/mundo.js": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/af/afa5e33c8c1b42794cd3eabef7a6be8c658e69866f1e73149b6bf02b5cef57dd",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/da/daef2e1d087dd79ba0d49d7e73105d59362a46d29aefc78ddc2a971abc6436b4"
+        },
+        "js/por-dentro.css": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/1f/1f74502ade26a42f4bb9e1274911b61755bab35cee6eb5a283e8c68ed6553aa5",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/8f/8f843e3c1239a69d7acffaca2f5f40d410b2b2d7139e665bb402f63da2460551"
+        }
+      }
+    },
+    "685ac32c-38dd-41c6-9585-0d64f8d3b848": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794066316935,
+      "endedAt": 1794066317030,
+      "files": {
+        "js/mundo.js": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/da/daef2e1d087dd79ba0d49d7e73105d59362a46d29aefc78ddc2a971abc6436b4",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/06/060d6d8a3ec6612fa717128c6e052d5fe412a9fb5b50e93f1a386d56ff313603"
+        },
+        "stills/contact-sheet-1.jpg": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/74/742a939aaa0907606ef467a3e2f9d0fe1e22aacdf6d95c804725f0a721bf3952"
+        },
+        "stills/contact-sheet-2.jpg": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/d9/d959ceaa6176828fed11a600e53b0464f705d8f44b9094229c1c0095fef0c50b"
+        },
+        "stills/frame-00-at-0s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/52/525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4"
+        },
+        "stills/frame-01-at-4s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/50/50a55b91179897751fedccd93e930b9a6fe95f905ba33fcc3370dbafe58ccb47"
+        },
+        "stills/frame-02-at-8.5s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/e0/e01d8f5be249c5ede1e5ed2b55357ef0bd485cda4079552cdd6604b3a03c11a3"
+        },
+        "stills/frame-03-at-13s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a5/a5f67bbee8769ada53005c6a2f5be3501ef79db9053e31ae07486204018f846d"
+        },
+        "stills/frame-04-at-17.5s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/3a/3ae3c6f38f6eedbde569faba52362fcdce0c581c57abd5d909ab5a22ef9d07c4"
+        },
+        "stills/frame-05-at-22s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/3c/3cfd8b5d72eb88fd417dd3071cf2677a69478ce9deaf0a893bf3f848c2cf3ec1"
+        },
+        "stills/frame-06-at-28s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/20/20b56da196646fa9726ea8f529b6fe740ad8604a5f3103b4ffcb0aed04d0ab10"
+        },
+        "stills/frame-07-at-33s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bd/bdfc5c93d014f3c780e6b2e42f49ae08d1d3d576fa09428b36776745357de74f"
+        },
+        "stills/frame-08-at-37.5s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/26/262d8d7fd6ee84b7de508ead2d27a3d0c29d977f0827b7c364865e570d2a95aa"
+        },
+        "stills/frame-09-at-44.5s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/52/525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4"
+        }
+      }
+    },
+    "07e9e160-efbd-4080-a70b-2acd1da52ece": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794066355990,
+      "endedAt": 1794066356020,
+      "files": {
+        "index.html": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/b6/b6025b7d02e0daef0c3dfb1d0a7ad8f631b5ae2ea17df510498bf3d213217649",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/f2/f292ecb83cf26cf24cf3e6aa34bfac41593c00e7dd63b15df369d83a1a81c3bd"
+        },
+        "js/mundo.js": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/06/060d6d8a3ec6612fa717128c6e052d5fe412a9fb5b50e93f1a386d56ff313603",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/31/3180897a88770e692a6569a2c580b33c9d511dd72f89ee60b0f618f9a383208c"
+        },
+        "stills2/contact-sheet.jpg": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/11/11302c081ead49e6d8dda9b625b53d53ed217c32dc78217ce5f0159531766410"
+        },
+        "stills2/frame-00-at-0s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/cb/cb5c193ea9dd42f8e239ad3685fbf28b3fb41108deac715cbb283910519ea06a"
+        },
+        "stills2/frame-01-at-13s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a5/a557cb781402fcbc1302129c6b435ea7a77ba618b4e074097fda6dd501806b6c"
+        },
+        "stills2/frame-02-at-24s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/64/64ae9725f05925bb0dbde3084e1cc6804c03e66782b23830c129db353a73326c"
+        },
+        "stills2/frame-03-at-37.5s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/ed/edbd3afe9ac82d86a8374c624cf0cac0f101c5466446d444fa15b95b8f958b91"
+        }
+      }
+    },
+    "364ade78-9173-4d2c-817b-aa0f4b3b5876": {
+      "actor": {
+        "kind": "outside",
+        "name": "Outside"
+      },
+      "label": "Changed outside the app",
+      "startedAt": 1794066391644,
+      "endedAt": 1794066391678,
+      "files": {
+        "index.html": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/f2/f292ecb83cf26cf24cf3e6aa34bfac41593c00e7dd63b15df369d83a1a81c3bd",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/13/138a0abd77bd0f58c3b8924e67f6dd104491ca11bd77e7c68f5252c01f977266"
+        },
+        "js/mundo.js": {
+          "before": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/31/3180897a88770e692a6569a2c580b33c9d511dd72f89ee60b0f618f9a383208c",
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bc/bc421474af0068fa28c386317d887790255600b9e62e83eef3e89b5721027e5b"
+        },
+        "stills3/contact-sheet.jpg": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/a0/a085f7dc30e78904432c2844886ec36fa7dcdb2ec13f842e1c626b7a5af1ae0b"
+        },
+        "stills3/frame-00-at-13s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/2b/2b601afb265a7b44df1f9d35a6fa7bb6fca58cb18e79d8629633f80fd416fa53"
+        },
+        "stills3/frame-01-at-28s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/88/88bb5433a2fbf4cf76b3419ec5574107e857632c2d1c0f77bdca2701a742e897"
+        },
+        "stills3/frame-02-at-33s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/51/51238f74a16e6e15875d293687d61ae9cb6ddbfc0d2386e5cd6499fdd41a4979"
+        },
+        "stills3/frame-03-at-37.8s.png": {
+          "before": null,
+          "after": "/home/nmaldaner/.cache/hyperframes/history/8a8d70aa-b644-4989-ba31-3cc7e5b72540/blobs/bf/bf3068b1f814a233fb25b593647cc8c5e28e47be2743c8f4a3774f6e88298523"
+        }
+      }
+    }
+  },
+  "checks": {
+    "latest": {
+      "revision": null,
+      "id": "c27ed5aa-8ada-4825-8731-48dc0517db5f"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "id": "8422ae10-34a0-4fd7-b0dc-a5e4a3eee75f",
+        "scope": "project",
+        "report": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/.hyperframes/artifacts/checks/8422ae10-34a0-4fd7-b0dc-a5e4a3eee75f.json",
+        "metadata": {
+          "ok": false,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 45000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1794066032975,
+        "contentHash": "5e4bc93d1f470e17d733f9fed4214b3e0ead264204015f27fea9b58d6f25a9e3",
+        "revision": null,
+        "inputFingerprint": "fbd35533b9fa9d0ad2221acd91a2ee1de0d0e0cb745ad0e4a110ef542da83fd4",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      },
+      {
+        "id": "c27ed5aa-8ada-4825-8731-48dc0517db5f",
+        "scope": "project",
+        "report": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/.hyperframes/artifacts/checks/c27ed5aa-8ada-4825-8731-48dc0517db5f.json",
+        "metadata": {
+          "ok": false,
+          "browserSkipped": false,
+          "options": {
+            "samples": 9,
+            "atTransitions": false,
+            "maxIssues": 80,
+            "collapseStatic": true,
+            "tolerance": 2,
+            "timeout": 45000,
+            "contrast": true,
+            "strict": false,
+            "snapshots": false,
+            "browserGpuMode": "auto"
+          }
+        },
+        "createdAt": 1794066195105,
+        "contentHash": "f6ab49f821683507a8a4b3fe92a27834afadd3e116f619ab2edf99df1db0053d",
+        "revision": null,
+        "inputFingerprint": "fbd35533b9fa9d0ad2221acd91a2ee1de0d0e0cb745ad0e4a110ef542da83fd4",
+        "inputScope": "local-project-files",
+        "attribution": "unversioned"
+      }
+    ]
+  },
+  "snapshots": {
+    "latest": {
+      "revision": null,
+      "id": "eafde02a-e0a6-4405-9193-9ff8fdfce44f-3"
+    },
+    "revisions": {},
+    "unversioned": [
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-0",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-00-at-0s.png",
+        "time": 0,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-1",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-01-at-4s.png",
+        "time": 4,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "50a55b91179897751fedccd93e930b9a6fe95f905ba33fcc3370dbafe58ccb47",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-2",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-02-at-8.5s.png",
+        "time": 8.5,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "e01d8f5be249c5ede1e5ed2b55357ef0bd485cda4079552cdd6604b3a03c11a3",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-3",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-03-at-13s.png",
+        "time": 13,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "a5f67bbee8769ada53005c6a2f5be3501ef79db9053e31ae07486204018f846d",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-4",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-04-at-17.5s.png",
+        "time": 17.5,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "3ae3c6f38f6eedbde569faba52362fcdce0c581c57abd5d909ab5a22ef9d07c4",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-5",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-05-at-22s.png",
+        "time": 22,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "3cfd8b5d72eb88fd417dd3071cf2677a69478ce9deaf0a893bf3f848c2cf3ec1",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-6",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-06-at-28s.png",
+        "time": 28,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "20b56da196646fa9726ea8f529b6fe740ad8604a5f3103b4ffcb0aed04d0ab10",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-7",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-07-at-33s.png",
+        "time": 33,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "bdfc5c93d014f3c780e6b2e42f49ae08d1d3d576fa09428b36776745357de74f",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-8",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-08-at-37.5s.png",
+        "time": 37.5,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "262d8d7fd6ee84b7de508ead2d27a3d0c29d977f0827b7c364865e570d2a95aa",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "4686bb1f-de6e-4f88-ac78-c7ae3a2c2dd9-9",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills/frame-09-at-44.5s.png",
+        "time": 44.5,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066270293,
+        "contentHash": "525e604d7c2c6f0f39cd905fc916ce11454be4eceb35d5ed64bcd101a70a7be4",
+        "revision": null,
+        "inputFingerprint": "72b43b1755fa05c98dfff55657d0cd63842bb75038d87667ae4a9aeedf765d08",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "e0a6c2cf-f333-4144-8c81-fb70875324da-0",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills2/frame-00-at-0s.png",
+        "time": 0,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066329790,
+        "contentHash": "cb5c193ea9dd42f8e239ad3685fbf28b3fb41108deac715cbb283910519ea06a",
+        "revision": null,
+        "inputFingerprint": "68dd6b7020cf2c699616b50b82ceee950b96648a5048e7bf345b42965c28df56",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "e0a6c2cf-f333-4144-8c81-fb70875324da-1",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills2/frame-01-at-13s.png",
+        "time": 13,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066329790,
+        "contentHash": "a557cb781402fcbc1302129c6b435ea7a77ba618b4e074097fda6dd501806b6c",
+        "revision": null,
+        "inputFingerprint": "68dd6b7020cf2c699616b50b82ceee950b96648a5048e7bf345b42965c28df56",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "e0a6c2cf-f333-4144-8c81-fb70875324da-2",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills2/frame-02-at-24s.png",
+        "time": 24,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066329790,
+        "contentHash": "64ae9725f05925bb0dbde3084e1cc6804c03e66782b23830c129db353a73326c",
+        "revision": null,
+        "inputFingerprint": "68dd6b7020cf2c699616b50b82ceee950b96648a5048e7bf345b42965c28df56",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "e0a6c2cf-f333-4144-8c81-fb70875324da-3",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills2/frame-03-at-37.5s.png",
+        "time": 37.5,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066329790,
+        "contentHash": "edbd3afe9ac82d86a8374c624cf0cac0f101c5466446d444fa15b95b8f958b91",
+        "revision": null,
+        "inputFingerprint": "68dd6b7020cf2c699616b50b82ceee950b96648a5048e7bf345b42965c28df56",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "eafde02a-e0a6-4405-9193-9ff8fdfce44f-0",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills3/frame-00-at-13s.png",
+        "time": 13,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066370243,
+        "contentHash": "2b601afb265a7b44df1f9d35a6fa7bb6fca58cb18e79d8629633f80fd416fa53",
+        "revision": null,
+        "inputFingerprint": "40f8f0bbc090aafc1bca986133b5c1cfa666285fde360cc810c674305de8de25",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "eafde02a-e0a6-4405-9193-9ff8fdfce44f-1",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills3/frame-01-at-28s.png",
+        "time": 28,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066370243,
+        "contentHash": "88bb5433a2fbf4cf76b3419ec5574107e857632c2d1c0f77bdca2701a742e897",
+        "revision": null,
+        "inputFingerprint": "40f8f0bbc090aafc1bca986133b5c1cfa666285fde360cc810c674305de8de25",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "eafde02a-e0a6-4405-9193-9ff8fdfce44f-2",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills3/frame-02-at-33s.png",
+        "time": 33,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066370243,
+        "contentHash": "51238f74a16e6e15875d293687d61ae9cb6ddbfc0d2386e5cd6499fdd41a4979",
+        "revision": null,
+        "inputFingerprint": "40f8f0bbc090aafc1bca986133b5c1cfa666285fde360cc810c674305de8de25",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      },
+      {
+        "scope": "full",
+        "id": "eafde02a-e0a6-4405-9193-9ff8fdfce44f-3",
+        "image": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/stills3/frame-03-at-37.8s.png",
+        "time": 37.8,
+        "metadata": {
+          "width": 1080,
+          "height": 1920,
+          "zoomScale": 1,
+          "browserGpuMode": "auto",
+          "warnings": [],
+          "partial": false
+        },
+        "createdAt": 1794066370243,
+        "contentHash": "bf3068b1f814a233fb25b593647cc8c5e28e47be2743c8f4a3774f6e88298523",
+        "revision": null,
+        "inputFingerprint": "40f8f0bbc090aafc1bca986133b5c1cfa666285fde360cc810c674305de8de25",
+        "inputScope": "local-project-files",
+        "attribution": "inputs-changed"
+      }
+    ]
+  },
+  "renders": {
+    "latest": {
+      "id": "c8854b80-1e17-469f-ad21-a256ffb2ad97",
+      "completedAt": 1794068236268,
+      "output": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/renders/coracao-por-dentro.mp4",
+      "status": "completed",
+      "revision": "364ade78-9173-4d2c-817b-aa0f4b3b5876"
+    },
+    "retainedRevisions": [
+      "364ade78-9173-4d2c-817b-aa0f4b3b5876"
+    ]
+  },
+  "pendingArtifactCleanup": []
+}

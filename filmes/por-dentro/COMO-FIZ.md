@@ -1,6 +1,6 @@
 # Como fiz — série "Como funciona por dentro" (reels 9:16 em 3D, só código)
 
-Dois episódios: **1 · Seu coração por dentro** (`coracao/`, 44,9 s) e **2 · Motor a jato por dentro** (`motor-jato/`, 49,4 s).
+Dois episódios: **1 · Seu coração por dentro** (`coracao/`, 44,9 s) e **2 · Motor a jato por dentro** (`motor-jato/`, 50,0 s).
 Motor: [reel-ciencia-3d](https://github.com/inematds/reel-ciencia-3d) (HyperFrames + Three.js, voz local do Nei presa à palavra).
 Nada de IA de imagem ou vídeo: os modelos 3D são construídos em código (esfera deformada, tornos, tubos, pás torcidas).
 
@@ -60,4 +60,6 @@ Vermelho/azul do coração, laranja da chama e metais são **cor de conteúdo**.
 ## O que mudou olhando os quadros
 - Coração: monitor colava no selo da capa → monitor só depois da capa; corte rosa "papelão" → placa mais escura com borda de parede; vista explodida espalhada demais → peças saem 70% e a câmera fica de frente; fonte "lub-dub" ficava na cena do sinal → fonte própria.
 - Motor: câmera perto demais (nacele cortada) → recuei 30–60%; texto branco sobre nacele branca → faixa escura atrás de legenda, número e fonte; eixo girando em torno do eixo errado saía da nacele → eixo parado (cilindro liso não mostra giro); explodida saía do quadro → alvo da câmera recentrado.
+- Motor: a fala dizia "mais largo que um Boeing 737" — a fonte diz *que a fuselagem de um 737*; refiz só essa frase (`voz.py --refazer` usa o cache das outras), tela e texto social, e renderizei de novo.
+- O `hyperframes check` final do coração foi antes dos últimos ajustes de etiqueta; os quadros do MP4 foram olhados um a um no lugar dele.
 - Fala do motor tinha 60 s → cortei a frase das pás cerâmicas e o nome "GE9X" da voz (ficou na tela) → 49 s.
