@@ -1,0 +1,551 @@
+{
+  "versao": "1.0.0",
+  "estrelas_em": "2026-11-07",
+  "legenda": {
+    "grupo": "selecao = 8 repos estudados a fundo; top10 = mais estrelados e ativos; em-alta = crescendo rápido em 2026; inema = projetos INEMA públicos",
+    "gpu": "nao = roda em CPU; opcional = acelera com GPU mas roda sem; sim = precisa de GPU (WebGL/WebGPU pesado)",
+    "voz": "sim = já traz narração; opcional = aceita narração de fora; nao = só música/sem fala",
+    "tipos": "tipos de filme que a ferramenta resolve, em ordem de força (o 1º é onde ela é melhor)",
+    "deps": "comando de instalação pesada, rodado só com instalar.sh --com-deps",
+    "bonus": "ajuste editorial na nota (+ mais fácil para agente / − pesado ou licença restritiva)"
+  },
+  "ferramentas": [
+    {
+      "nome": "lemo-opuscar",
+      "repo": "lemomo-ai/lemo-opuscar",
+      "url": "https://github.com/lemomo-ai/lemo-opuscar",
+      "estrelas": 13264,
+      "licenca": "MIT",
+      "stack": "JavaScript, HTML/Canvas, ffmpeg, TTS local (Kokoro)",
+      "grupo": "selecao",
+      "tipos": [
+        "estilo-cinema",
+        "quadro-negro",
+        "explicativo",
+        "desenho",
+        "b-roll"
+      ],
+      "resolve": "66 estilos de filme prontos (quadro-negro, telejornal, satélite, isométrico…) com linha do tempo única de imagem + música + SFX + legenda",
+      "peso": "médio (Node + ffmpeg; node_modules ~centenas de MB)",
+      "gpu": "nao",
+      "voz": "sim",
+      "deps": "npm install",
+      "instalar": "git clone --depth 1 https://github.com/lemomo-ai/lemo-opuscar && cd lemo-opuscar && npm install",
+      "so_estudo": false,
+      "observacoes": "Melhor qualidade da seleção. Tem verificador de tempo de leitura e voz checada por Whisper. Trocar o Kokoro pela voz local Chatterbox (inemavox).",
+      "inema": [
+        "video-codigo",
+        "video-sem-rosto",
+        "explicavideos"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "claude-animation-base",
+      "repo": "JohnHeibel/ClaudeAnimationBase",
+      "url": "https://github.com/JohnHeibel/ClaudeAnimationBase",
+      "estrelas": 2690,
+      "licenca": "MIT",
+      "stack": "p5.js + p5.brush, Node, Chrome headless",
+      "grupo": "selecao",
+      "tipos": [
+        "desenho"
+      ],
+      "resolve": "desenho animado com personagem pintado à mão (traço de pincel), cena a cena",
+      "peso": "leve no disco, lento no render (~4 s por quadro em CPU)",
+      "gpu": "opcional",
+      "voz": "opcional",
+      "deps": "npm install",
+      "instalar": "git clone --depth 1 https://github.com/JohnHeibel/ClaudeAnimationBase && cd ClaudeAnimationBase && npm install",
+      "so_estudo": false,
+      "observacoes": "Único da área com personagem animado. Chrome sem tela com GPU falha em algumas máquinas: renderize em CPU e divida em workers.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "pdoom-video",
+      "repo": "JohnHeibel/PDoomVideo",
+      "url": "https://github.com/JohnHeibel/PDoomVideo",
+      "estrelas": 2856,
+      "licenca": "NENHUMA",
+      "stack": "JavaScript",
+      "grupo": "selecao",
+      "tipos": [],
+      "resolve": "referência de clipe musical feito em código (ritmo, cortes no tempo da música)",
+      "peso": "—",
+      "gpu": "nao",
+      "voz": "nao",
+      "deps": "",
+      "instalar": "abrir o link e estudar — sem licença, não clonar nem copiar código",
+      "so_estudo": true,
+      "observacoes": "Sem licença: só estudo. O instalar.sh recusa clonar e só mostra o link.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "functional-emotions-video",
+      "repo": "ledbetterljoshua/functional-emotions-video",
+      "url": "https://github.com/ledbetterljoshua/functional-emotions-video",
+      "estrelas": 74,
+      "licenca": "MIT",
+      "stack": "JavaScript, WebGL (pincel a óleo), Python (Demucs + alinhamento de letra)",
+      "grupo": "selecao",
+      "tipos": [
+        "clipe"
+      ],
+      "resolve": "clipe musical pintado, com a letra alinhada à voz da música",
+      "peso": "pesado (WebGL + Demucs para separar a voz)",
+      "gpu": "sim",
+      "voz": "nao",
+      "deps": "npm install",
+      "instalar": "git clone --depth 1 https://github.com/ledbetterljoshua/functional-emotions-video && cd functional-emotions-video && npm install",
+      "so_estudo": false,
+      "observacoes": "Técnica de pincel a óleo serve como acabamento no pixflow. Reconstruir o tempo da letra pede pip install -r analysis/requirements.txt.",
+      "inema": [
+        "pixflow"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "hyperframes",
+      "repo": "heygen-com/hyperframes",
+      "url": "https://github.com/heygen-com/hyperframes",
+      "estrelas": 80393,
+      "licenca": "Apache-2.0",
+      "stack": "TypeScript, HTML/CSS/GSAP → MP4, Chrome headless",
+      "grupo": "selecao",
+      "tipos": [
+        "explicativo",
+        "dados",
+        "lancamento",
+        "clipe",
+        "ciencia-3d",
+        "b-roll"
+      ],
+      "resolve": "qualquer vídeo escrito como página HTML: explicativo, gráfico animado, lançamento, legenda, vertical",
+      "peso": "médio (npx baixa o CLI + Chromium ~100 MB)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "npx hyperframes doctor",
+      "instalar": "npx skills add heygen-com/hyperframes  (ou: npx hyperframes init meu-filme)",
+      "so_estudo": false,
+      "observacoes": "Motor-base do INEMA. Registry com ~450 peças. Evitar as partes pagas.",
+      "inema": [
+        "hyperframes",
+        "explicavideos",
+        "reel-ciencia-3d",
+        "video-codigo"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "motion-skills",
+      "repo": "iart-ai/motion-skills",
+      "url": "https://github.com/iart-ai/motion-skills",
+      "estrelas": 1266,
+      "licenca": "MIT",
+      "stack": "Skills (Markdown) + HTML",
+      "grupo": "selecao",
+      "tipos": [
+        "b-roll",
+        "quadro-negro",
+        "dados"
+      ],
+      "resolve": "50+ skills que ensinam o agente: talking-head com b-roll, quadro branco, trilha presa aos cortes",
+      "peso": "leve (só texto)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "",
+      "instalar": "npx skills add iart-ai/motion-skills  (ou copiar só as skills que precisar)",
+      "so_estudo": false,
+      "observacoes": "Copiar 3 skills (talking-head-b-roll, whiteboard, soundtrack); não precisa instalar tudo.",
+      "inema": [
+        "video-codigo",
+        "explicavideos"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "opus-video-prompts",
+      "repo": "joeseesun/opus-video-prompts",
+      "url": "https://github.com/joeseesun/opus-video-prompts",
+      "estrelas": 969,
+      "licenca": "NENHUMA",
+      "stack": "Markdown (prompts em chinês)",
+      "grupo": "selecao",
+      "tipos": [],
+      "resolve": "coleção de casos e prompts de vídeo feito por código",
+      "peso": "leve",
+      "gpu": "nao",
+      "voz": "nao",
+      "deps": "",
+      "instalar": "git clone --depth 1 https://github.com/joeseesun/opus-video-prompts",
+      "so_estudo": false,
+      "observacoes": "Fonte de ideias, não é ferramenta. Os prompts deste repositório (pasta prompts/) foram adaptados, não copiados.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "awesome-opus5-5-videos",
+      "repo": "yihui-dev/awesome-opus5-5-videos",
+      "url": "https://github.com/yihui-dev/awesome-opus5-5-videos",
+      "estrelas": 13997,
+      "licenca": "MIT",
+      "stack": "Markdown + data/videos.json",
+      "grupo": "selecao",
+      "tipos": [],
+      "resolve": "703 vídeos feitos por código com o prompt de cada um",
+      "peso": "leve",
+      "gpu": "nao",
+      "voz": "nao",
+      "deps": "",
+      "instalar": "git clone --depth 1 https://github.com/yihui-dev/awesome-opus5-5-videos",
+      "so_estudo": false,
+      "observacoes": "Fonte de pautas e de prompts. Também no top 10.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "manim-3b1b",
+      "repo": "3b1b/manim",
+      "url": "https://github.com/3b1b/manim",
+      "estrelas": 96229,
+      "licenca": "MIT",
+      "stack": "Python, OpenGL, LaTeX",
+      "grupo": "top10",
+      "tipos": [
+        "matematica"
+      ],
+      "resolve": "animação matemática no estilo 3Blue1Brown",
+      "peso": "médio (Python + LaTeX + OpenGL)",
+      "gpu": "opcional",
+      "voz": "nao",
+      "deps": "pip install -e .",
+      "instalar": "pip install manimgl",
+      "so_estudo": false,
+      "observacoes": "Versão do autor original; para agentes a versão comunidade ou a manimgx costuma ser mais simples.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "openmontage",
+      "repo": "calesthio/OpenMontage",
+      "url": "https://github.com/calesthio/OpenMontage",
+      "estrelas": 78065,
+      "licenca": "AGPL-3.0",
+      "stack": "Python + Remotion",
+      "grupo": "top10",
+      "tipos": [
+        "explicativo",
+        "lancamento"
+      ],
+      "resolve": "12 pipelines de produção com agentes (roteiro → cenas → montagem)",
+      "peso": "pesado (venv Python + node_modules do Remotion)",
+      "gpu": "opcional",
+      "voz": "opcional",
+      "deps": "python3 -m venv .venv && .venv/bin/pip install -r requirements.txt && cd remotion-composer && npm install",
+      "instalar": "git clone --depth 1 https://github.com/calesthio/OpenMontage && cd OpenMontage && make setup",
+      "so_estudo": false,
+      "observacoes": "AGPL: modificar e servir exige abrir o código. Muitos recursos pedem chaves de API — usar só o caminho local.",
+      "inema": [
+        "explicavideos"
+      ],
+      "bonus": -1
+    },
+    {
+      "nome": "remotion",
+      "repo": "remotion-dev/remotion",
+      "url": "https://github.com/remotion-dev/remotion",
+      "estrelas": 71450,
+      "licenca": "Remotion License (grátis p/ pessoas e times pequenos)",
+      "stack": "React, TypeScript",
+      "grupo": "top10",
+      "tipos": [
+        "dados",
+        "lancamento"
+      ],
+      "resolve": "vídeo escrito em React: gráficos, promo, templates com dados",
+      "peso": "médio",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "",
+      "instalar": "npx create-video@latest",
+      "so_estudo": false,
+      "observacoes": "Licença própria: empresas acima de 3 pessoas pagam. Para conteúdo educativo aberto, ok.",
+      "inema": [
+        "hyperframes"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "manim-community",
+      "repo": "ManimCommunity/manim",
+      "url": "https://github.com/ManimCommunity/manim",
+      "estrelas": 42324,
+      "licenca": "MIT",
+      "stack": "Python, Cairo/OpenGL, LaTeX",
+      "grupo": "top10",
+      "tipos": [
+        "matematica"
+      ],
+      "resolve": "animação matemática, API estável e muito documentada",
+      "peso": "médio (Python + LaTeX)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "",
+      "instalar": "pip install manim",
+      "so_estudo": false,
+      "observacoes": "A API que a manimgx imita; muitos exemplos na internet.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "brag",
+      "repo": "latent-spaces/brag",
+      "url": "https://github.com/latent-spaces/brag",
+      "estrelas": 20637,
+      "licenca": "MIT",
+      "stack": "Skill (Claude Code/Codex) + HyperFrames, Node 22+, ffmpeg",
+      "grupo": "top10",
+      "tipos": [
+        "lancamento"
+      ],
+      "resolve": "projeto ou site → vídeo de lançamento de ~20 s com trilha e texto para divulgar",
+      "peso": "leve (skill) + HyperFrames",
+      "gpu": "nao",
+      "voz": "nao",
+      "deps": "npx skills add https://github.com/latent-spaces/brag --skill brag-slim",
+      "instalar": "no Claude Code: /plugin marketplace add latent-spaces/brag  e  /plugin install brag@brag",
+      "so_estudo": false,
+      "observacoes": "Feito para o caso 'acabei um projeto, quero o vídeo'. Bom candidato a vídeo de lançamento de cada guia INEMA.",
+      "inema": [
+        "hyperframes",
+        "explicavideos"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "video-shotcraft",
+      "repo": "Vincentwei1021/video-shotcraft",
+      "url": "https://github.com/Vincentwei1021/video-shotcraft",
+      "estrelas": 17593,
+      "licenca": "Apache-2.0",
+      "stack": "Skill + Remotion",
+      "grupo": "top10",
+      "tipos": [
+        "lancamento"
+      ],
+      "resolve": "promo de produto cinematográfica e editável: 124 receitas de plano, 150 movimentos",
+      "peso": "médio (Remotion)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "",
+      "instalar": "npx skills add Vincentwei1021/video-shotcraft",
+      "so_estudo": false,
+      "observacoes": "Sem chave de API. O README tem propaganda de um intermediário de API — ignorar.",
+      "inema": [
+        "hyperframes"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "huashu-art-motion",
+      "repo": "alchaincyf/huashu-art-motion",
+      "url": "https://github.com/alchaincyf/huashu-art-motion",
+      "estrelas": 6442,
+      "licenca": "MIT",
+      "stack": "Python (uv) + Playwright + ffmpeg",
+      "grupo": "top10",
+      "tipos": [
+        "estilo-cinema",
+        "desenho",
+        "explicativo"
+      ],
+      "resolve": "35 estilos de arte (Van Gogh, ukiyo-e…) e 9 jeitos de explicar, com a pintura em movimento",
+      "peso": "médio (uv + Chromium)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "uv run --with playwright playwright install chromium",
+      "instalar": "npx skills add alchaincyf/huashu-art-motion",
+      "so_estudo": false,
+      "observacoes": "Conteúdo da skill em chinês; o agente lê sem problema.",
+      "inema": [
+        "pixflow"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "openfilm",
+      "repo": "openfilm/openfilm",
+      "url": "https://github.com/openfilm/openfilm",
+      "estrelas": 5182,
+      "licenca": "MIT",
+      "stack": "TypeScript, film.html + frame(t), Studio (editor local), Node 22.2+, ffmpeg",
+      "grupo": "em-alta",
+      "tipos": [
+        "explicativo",
+        "lancamento",
+        "dados"
+      ],
+      "resolve": "o agente escreve o filme como páginas web e você edita à mão num editor de linha do tempo",
+      "peso": "médio (npx + Chromium ~100 MB)",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "npx -y openfilm@latest doctor",
+      "instalar": "npx skills add openfilm/openfilm",
+      "so_estudo": false,
+      "observacoes": "Biblioteca de música/SFX grátis. Voz e imagem geradas pedem chaves de serviços — no INEMA, usar voz local.",
+      "inema": [
+        "hyperframes",
+        "video-codigo"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "reanimate",
+      "repo": "NiazMorshed2007/reanimate",
+      "url": "https://github.com/NiazMorshed2007/reanimate",
+      "estrelas": 1350,
+      "licenca": "MIT",
+      "stack": "Skill + Bun + Playwright",
+      "grupo": "em-alta",
+      "tipos": [
+        "estilo-cinema"
+      ],
+      "resolve": "refaz uma animação de referência quadro a quadro até bater pixel com o original",
+      "peso": "médio (Bun + Chromium + ffmpeg estático)",
+      "gpu": "nao",
+      "voz": "nao",
+      "deps": "",
+      "instalar": "npx skills add NiazMorshed2007/reanimate -g",
+      "so_estudo": false,
+      "observacoes": "Útil para aprender um estilo de animação que você viu num site e reproduzir com código próprio.",
+      "inema": [],
+      "bonus": 0
+    },
+    {
+      "nome": "huashu-motion",
+      "repo": "alchaincyf/huashu-motion",
+      "url": "https://github.com/alchaincyf/huashu-motion",
+      "estrelas": 2470,
+      "licenca": "MIT",
+      "stack": "Skill + JavaScript",
+      "grupo": "em-alta",
+      "tipos": [
+        "lancamento"
+      ],
+      "resolve": "filme de lançamento comercial com trilha composta e ajuste apontando na tela",
+      "peso": "médio",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "",
+      "instalar": "npx skills add alchaincyf/huashu-motion",
+      "so_estudo": false,
+      "observacoes": "Conteúdo em chinês.",
+      "inema": [
+        "hyperframes"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "onetake",
+      "repo": "feitangyuan/onetake",
+      "url": "https://github.com/feitangyuan/onetake",
+      "estrelas": 3899,
+      "licenca": "sem SPDX (ver repo)",
+      "stack": "Skill + Python (playwright, numpy, scipy, Pillow, matplotlib)",
+      "grupo": "em-alta",
+      "tipos": [
+        "estilo-cinema",
+        "explicativo"
+      ],
+      "resolve": "filme em plano-sequência: cada ideia nasce da anterior, sem corte para o próximo slide",
+      "peso": "médio",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "pip install playwright numpy scipy Pillow matplotlib && python3 -m playwright install chromium",
+      "instalar": "git clone --depth 1 https://github.com/feitangyuan/onetake ~/.claude/skills/onetake",
+      "so_estudo": false,
+      "observacoes": "Licença não identificada pelo GitHub: conferir o arquivo LICENSE antes de reaproveitar código.",
+      "inema": [
+        "pixflow"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "manimgx",
+      "repo": "academa-labs/manimgx",
+      "url": "https://github.com/academa-labs/manimgx",
+      "estrelas": 2591,
+      "licenca": "MIT",
+      "stack": "Python 3.13+ (API do Manim CE) + Rust/wgpu",
+      "grupo": "em-alta",
+      "tipos": [
+        "matematica",
+        "ciencia-3d"
+      ],
+      "resolve": "matemática e 3D com a API do Manim, dezenas de vezes mais rápido; roda até no navegador",
+      "peso": "leve (pip; fontes, LaTeX e encoder já vêm juntos)",
+      "gpu": "opcional",
+      "voz": "nao",
+      "deps": "",
+      "instalar": "uv tool install --python 3.14 manimgx   (ou: pip install manimgx com Python 3.13+)",
+      "so_estudo": false,
+      "observacoes": "Sem GPU usa o lavapipe (Vulkan em CPU) que vem no pacote Linux. Traz skill própria em skills/manimgx.",
+      "inema": [
+        "reel-ciencia-3d"
+      ],
+      "bonus": 1.5
+    },
+    {
+      "nome": "video-codigo",
+      "repo": "inematds/video-codigo",
+      "url": "https://github.com/inematds/video-codigo",
+      "estrelas": 0,
+      "licenca": "INEMA (conteúdo aberto)",
+      "stack": "HTML/Canvas → MP4, voz local presa à palavra (Chatterbox via inemavox)",
+      "grupo": "inema",
+      "tipos": [
+        "b-roll",
+        "explicativo",
+        "dados"
+      ],
+      "resolve": "vídeo feito com código com voz local sincronizada palavra a palavra",
+      "peso": "leve",
+      "gpu": "nao",
+      "voz": "sim",
+      "deps": "./instalar.sh",
+      "instalar": "git clone --depth 1 https://github.com/inematds/video-codigo && cd video-codigo && ./instalar.sh",
+      "so_estudo": false,
+      "observacoes": "Projeto INEMA. A voz é local (nada de API).",
+      "inema": [
+        "video-codigo"
+      ],
+      "bonus": 0
+    },
+    {
+      "nome": "reel-ciencia-3d",
+      "repo": "inematds/reel-ciencia-3d",
+      "url": "https://github.com/inematds/reel-ciencia-3d",
+      "estrelas": 0,
+      "licenca": "MIT",
+      "stack": "HyperFrames + Three.js",
+      "grupo": "inema",
+      "tipos": [
+        "ciencia-3d"
+      ],
+      "resolve": "reels de ciência 'E se…?' 9:16 em 3D feitos só com código",
+      "peso": "leve",
+      "gpu": "nao",
+      "voz": "opcional",
+      "deps": "npm install",
+      "instalar": "git clone --depth 1 https://github.com/inematds/reel-ciencia-3d && cd reel-ciencia-3d && npm install",
+      "so_estudo": false,
+      "observacoes": "Projeto INEMA. Render em CPU.",
+      "inema": [
+        "reel-ciencia-3d"
+      ],
+      "bonus": 0
+    }
+  ]
+}

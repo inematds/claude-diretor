@@ -1,0 +1,111 @@
+{
+ "id": "coracao",
+ "pausa": 0.22,
+ "intervalo_blocos": 0.4,
+ "voz": "nei",
+ "tela": {
+  "cem mil": "100 mil",
+  "sete mil e quinhentos": "7.500",
+  "7500": "7.500",
+  "quatro": "4"
+ },
+ "destaques": [
+  "coração",
+  "quatro",
+  "átrios",
+  "ventrículos",
+  "oxigênio",
+  "direito",
+  "esquerdo",
+  "aorta",
+  "pulmões",
+  "válvulas",
+  "fechando",
+  "elétrico",
+  "ritmo",
+  "inema"
+ ],
+ "blocos": [
+  {
+   "id": "b0",
+   "frases": [
+    {
+     "id": "titulo",
+     "texto": "Seu coração por dentro."
+    }
+   ]
+  },
+  {
+   "id": "b1",
+   "frases": [
+    {
+     "id": "batidas",
+     "texto": "Ele bate cerca de cem mil vezes por dia e empurra uns sete mil e quinhentos litros de sangue."
+    }
+   ]
+  },
+  {
+   "id": "b2",
+   "frases": [
+    {
+     "id": "camaras",
+     "texto": "Por dentro, são quatro câmaras: dois átrios em cima, dois ventrículos embaixo."
+    }
+   ]
+  },
+  {
+   "id": "b3",
+   "frases": [
+    {
+     "id": "azul",
+     "texto": "O sangue sem oxigênio chega pelo lado direito e sai para os pulmões."
+    }
+   ]
+  },
+  {
+   "id": "b4",
+   "frases": [
+    {
+     "id": "vermelho",
+     "texto": "Volta cheio de oxigênio pelo lado esquerdo, e o ventrículo esquerdo manda tudo pela aorta."
+    }
+   ]
+  },
+  {
+   "id": "b5",
+   "frases": [
+    {
+     "id": "valvulas",
+     "texto": "Quatro válvulas impedem a volta. O tum-tá que você escuta é o barulho delas fechando."
+    }
+   ]
+  },
+  {
+   "id": "b6",
+   "frases": [
+    {
+     "id": "sinal",
+     "texto": "E quem dá o ritmo é um sinal elétrico que nasce no átrio direito."
+    }
+   ]
+  },
+  {
+   "id": "b7",
+   "frases": [
+    {
+     "id": "pecas",
+     "texto": "Peça por peça, trabalhando sem parar."
+    }
+   ]
+  },
+  {
+   "id": "b8",
+   "frases": [
+    {
+     "id": "volta",
+     "texto": "Como funciona por dentro. Tem mais no INEMA.CLUB."
+    }
+   ]
+  }
+ ]
+}

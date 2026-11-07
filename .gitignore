@@ -1,0 +1,28 @@
+# dependências
+node_modules/
+.venv/
+__pycache__/
+*.pyc
+
+# saídas pesadas dos filmes
+*.mp4
+*.mov
+*.webm
+*.wav
+*.mp3
+*.flac
+filmes/**/saida/
+filmes/**/frames/
+filmes/**/_frames/
+filmes/**/renders/
+filmes/**/work/
+filmes/**/tmp/
+frames/
+*.log
+
+# sistema
+.DS_Store
+*.lock
+
+# caminhos locais de navegador (gerados pelos filmes)
+.chrome

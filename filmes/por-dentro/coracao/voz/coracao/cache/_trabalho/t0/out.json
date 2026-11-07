@@ -1,0 +1,68 @@
+{
+  "sr": 24000,
+  "segments": [
+    {
+      "idx": 1,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0001.wav",
+      "target": 1.0,
+      "actual": 1.84,
+      "ratio": 1.84
+    },
+    {
+      "idx": 2,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0002.wav",
+      "target": 1.0,
+      "actual": 7.16,
+      "ratio": 7.16
+    },
+    {
+      "idx": 3,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0003.wav",
+      "target": 1.0,
+      "actual": 7.04,
+      "ratio": 7.04
+    },
+    {
+      "idx": 4,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0004.wav",
+      "target": 1.0,
+      "actual": 4.96,
+      "ratio": 4.96
+    },
+    {
+      "idx": 5,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0005.wav",
+      "target": 1.0,
+      "actual": 7.0,
+      "ratio": 7.0
+    },
+    {
+      "idx": 6,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0006.wav",
+      "target": 1.0,
+      "actual": 6.44,
+      "ratio": 6.44
+    },
+    {
+      "idx": 7,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0007.wav",
+      "target": 1.0,
+      "actual": 6.44,
+      "ratio": 6.44
+    },
+    {
+      "idx": 8,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0008.wav",
+      "target": 1.0,
+      "actual": 3.52,
+      "ratio": 3.52
+    },
+    {
+      "idx": 9,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/por-dentro/coracao/voz/coracao/cache/_trabalho/t0/seg_0009.wav",
+      "target": 1.0,
+      "actual": 4.12,
+      "ratio": 4.12
+    }
+  ]
+}

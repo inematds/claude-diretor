@@ -1,0 +1,132 @@
+{
+ "id": "filme",
+ "duracion": 17.6,
+ "voz": "nei",
+ "pausa": 0.25,
+ "bloques": [
+  {
+   "id": "b1",
+   "inicio": 0.5,
+   "fin": 2.04
+  },
+  {
+   "id": "b2",
+   "inicio": 9.2,
+   "fin": 12.919999999999998
+  },
+  {
+   "id": "b3",
+   "inicio": 14.0,
+   "fin": 15.31
+  }
+ ],
+ "frases": [
+  {
+   "id": "hook",
+   "bloque": "b1",
+   "texto": "Aprender IA de graça?",
+   "inicio": 0.5,
+   "fin": 2.04
+  },
+  {
+   "id": "meio",
+   "bloque": "b2",
+   "texto": "Cursos, guias e vídeos. Tudo aberto.",
+   "inicio": 9.2,
+   "fin": 12.919999999999998
+  },
+  {
+   "id": "fecho",
+   "bloque": "b3",
+   "texto": "Tá tudo no INEMA.CLUB.",
+   "inicio": 14.0,
+   "fin": 15.31
+  }
+ ],
+ "palabras": [
+  {
+   "texto": "Aprender",
+   "inicio": 0.5,
+   "fin": 1.1600000000000001,
+   "frase": "hook"
+  },
+  {
+   "texto": "IA",
+   "inicio": 1.1600000000000001,
+   "fin": 1.38,
+   "frase": "hook"
+  },
+  {
+   "texto": "de",
+   "inicio": 1.38,
+   "fin": 1.6,
+   "frase": "hook"
+  },
+  {
+   "texto": "graça?",
+   "inicio": 1.6,
+   "fin": 2.04,
+   "frase": "hook"
+  },
+  {
+   "texto": "Cursos,",
+   "inicio": 9.2,
+   "fin": 9.86,
+   "frase": "meio"
+  },
+  {
+   "texto": "guias",
+   "inicio": 9.86,
+   "fin": 10.6,
+   "frase": "meio"
+  },
+  {
+   "texto": "e",
+   "inicio": 10.6,
+   "fin": 10.84,
+   "frase": "meio"
+  },
+  {
+   "texto": "vídeos.",
+   "inicio": 10.84,
+   "fin": 11.479999999999999,
+   "frase": "meio"
+  },
+  {
+   "texto": "Tudo",
+   "inicio": 11.739999999999998,
+   "fin": 12.399999999999999,
+   "frase": "meio"
+  },
+  {
+   "texto": "aberto.",
+   "inicio": 12.399999999999999,
+   "fin": 12.919999999999998,
+   "frase": "meio"
+  },
+  {
+   "texto": "Tá",
+   "inicio": 14.0,
+   "fin": 14.187000000000001,
+   "frase": "fecho"
+  },
+  {
+   "texto": "tudo",
+   "inicio": 14.187000000000001,
+   "fin": 14.498999999999999,
+   "frase": "fecho"
+  },
+  {
+   "texto": "no",
+   "inicio": 14.498999999999999,
+   "fin": 14.686,
+   "frase": "fecho"
+  },
+  {
+   "texto": "INEMA.CLUB.",
+   "inicio": 14.686,
+   "fin": 15.31,
+   "frase": "fecho"
+  }
+ ]
+}

@@ -1,0 +1,6 @@
+{"id": "mascote", "pausa": 0.25, "intervalo_blocos": 0.6, "voz": "nei",
+ "blocos": [
+  {"id": "b1", "frases": [{"id": "hook", "texto": "Aprender IA de graça?"}]},
+  {"id": "b2", "frases": [{"id": "meio", "texto": "Cursos, guias e vídeos. Tudo aberto."}]},
+  {"id": "b3", "frases": [{"id": "fecho", "texto": "Tá tudo no INEMA.CLUB."}]}
+ ]}

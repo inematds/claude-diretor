@@ -1,0 +1,26 @@
+{
+  "sr": 24000,
+  "segments": [
+    {
+      "idx": 1,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/quadro-negro/voz/agente/cache/_trabalho/t2/seg_0001.wav",
+      "target": 1.0,
+      "actual": 2.44,
+      "ratio": 2.44
+    },
+    {
+      "idx": 2,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/quadro-negro/voz/agente/cache/_trabalho/t2/seg_0002.wav",
+      "target": 1.0,
+      "actual": 3.56,
+      "ratio": 3.56
+    },
+    {
+      "idx": 3,
+      "file": "/home/nmaldaner/projetos/claude-diretor/filmes/quadro-negro/voz/agente/cache/_trabalho/t2/seg_0003.wav",
+      "target": 1.0,
+      "actual": 4.64,
+      "ratio": 4.64
+    }
+  ]
+}

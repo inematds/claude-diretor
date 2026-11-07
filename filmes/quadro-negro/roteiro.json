@@ -1,0 +1,31 @@
+{
+  "id": "agente",
+  "voz": "nei",
+  "pausa": 0.3,
+  "intervalo_blocos": 0.55,
+  "dicionario": [["\\bChat\\b", "Tchét"], ["\\bchat\\b", "tchét"]],
+  "blocos": [
+    {"id": "gancho", "frases": [
+      {"id": "a1", "texto": "Chat responde uma vez."},
+      {"id": "a2", "texto": "Agente de IA trabalha em loop, até terminar."}
+    ]},
+    {"id": "loop", "frases": [
+      {"id": "l1", "texto": "Primeiro, ele pensa: qual é o próximo passo?"},
+      {"id": "l2", "texto": "Depois, usa uma ferramenta: busca na web, abre um arquivo, roda um código."},
+      {"id": "l3", "texto": "Então, olha o resultado."},
+      {"id": "l4", "texto": "Não deu certo? Ele volta e pensa de novo."}
+    ]},
+    {"id": "memoria", "frases": [
+      {"id": "m1", "texto": "Cada volta fica anotada no contexto, a memória de trabalho dele."},
+      {"id": "m2", "texto": "Por isso ele não repete o mesmo erro."}
+    ]},
+    {"id": "parada", "frases": [
+      {"id": "p1", "texto": "E quando ele para?"},
+      {"id": "p2", "texto": "Quando cumpre o objetivo, ou quando bate um limite: tempo, número de passos, ou a sua aprovação."}
+    ]},
+    {"id": "fecho", "frases": [
+      {"id": "f1", "texto": "Chat responde. Agente executa."},
+      {"id": "f2", "texto": "Tudo no INEMA.CLUB."}
+    ]}
+  ]
+}
