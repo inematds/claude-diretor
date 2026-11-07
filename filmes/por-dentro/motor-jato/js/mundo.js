@@ -1,374 +1,246 @@
-// "E se a Terra não tivesse inclinação?" — o mundo 3D do reel, desenhado só a partir do tempo do vídeo.
-// Fatos usados: fatos.md (F1–F12). Cenas: campo → sombra → Porto Alegre → globo (Manaus) → Antártida (Ferraz)
-// → planeta (+7% em janeiro) → polo → Júpiter → volta (o último quadro repete o primeiro).
+// "Um motor a jato por dentro" — turbofan 3D feito só com código, desenhado a partir do tempo do vídeo.
+// Fatos: fatos.md. Eixo do motor = x local (entrada em -x, bocal em +x); o grupo é inclinado na diagonal do 9:16.
+// Cenas: capa → ventilador (16 pás, 3,4 m) → corte: ar por fora × núcleo → compressor (×60) → combustão
+// → turbina e os 2 eixos → bocal (empuxo) → vista explodida (aspira, comprime, queima, sopra) → fecha e volta à capa.
 import {
-  THREE, W, H, D2R, clamp, lerp, ramp, io, out3, win, v3, rng, COR,
-  criarMundo, mat, solido, aparencia, ceu, globo, noGlobo, rotulo, legenda, cartoes, ligar,
+  THREE, W, H, clamp, lerp, ramp, io, out3, win, v3, rng, criarMundo, legenda, cartoes, ligar,
 } from '../motor/base.js';
 import { FIM, BLOCOS as B, FRASES as F, LEG, palavra } from './tempos.js';
+import { estudio, cameraPorChaves, etiquetas, texturaFibras } from './oficina.js';
 
 const { renderer, scene, camera } = criarMundo();
-const ceuDome = ceu(scene);
+camera.fov = 30; camera.updateProjectionMatrix();
+estudio(renderer, scene, { env: 0.75, centro: '#1c2430', cy: 0.52 });
+
+const motor = new THREE.Group(); motor.rotation.z = -0.78; scene.add(motor);
+// corte em quarto: some só onde y > c E z > c (clipIntersection)
+const PL1 = new THREE.Plane(v3(0, -1, 0), 99), PL2 = new THREE.Plane(v3(0, 0, -1), 99);
+const cl1 = new THREE.Plane(), cl2 = new THREE.Plane();
+const CORTE = [cl1, cl2];
+
+// ------------------------------------------------------------- materiais
+const escovado = texturaFibras({ base: '#c9ced4', claro: 'rgba(255,255,255,0.10)', escuro: 'rgba(60,70,80,0.10)', ang: 0, seed: 21, n: 1600 });
+const metal = (cor, { rough = 0.32, metal: me = 0.85, corta = true, map = null, extra = {} } = {}) => new THREE.MeshPhysicalMaterial({
+  color: cor, roughness: rough, metalness: me, map, side: THREE.DoubleSide,
+  clippingPlanes: corta ? CORTE : [], clipIntersection: true, ...extra,
+});
+const M = {
+  nacele: metal(0xc4c9cf, { rough: 0.4, metal: 0.3, extra: { clearcoat: 0.6, clearcoatRoughness: 0.25 } }),
+  naceleDentro: metal(0x5d646c, { rough: 0.55, metal: 0.4 }),
+  fan: metal(0x262b31, { rough: 0.3, metal: 0.55, corta: false, extra: { clearcoat: 0.7, clearcoatRoughness: 0.2 } }),
+  spinner: metal(0xb9c0c8, { rough: 0.18, metal: 0.95, corta: false }),
+  casca: metal(0xaab2bb, { rough: 0.35, map: escovado }),
+  comp: metal(0xc6ccd3, { rough: 0.25, corta: false }),
+  hub: metal(0x7c858f, { rough: 0.4 }),
+  quente: metal(0x8f7c6e, { rough: 0.38, corta: false, extra: { emissive: new THREE.Color(0x3a1404), emissiveIntensity: 0 } }),
+  liner: metal(0x9a8f86, { rough: 0.45 }),
+  bocal: metal(0x6e6862, { rough: 0.4, metal: 0.9 }),
+};
+const lathe = (perfil, mat, seg = 160) => {
+  const g = new THREE.LatheGeometry(perfil.map(([x, r]) => new THREE.Vector2(r, x)), seg);
+  g.rotateZ(-Math.PI / 2); g.computeVertexNormals();
+  return new THREE.Mesh(g, mat);
+};
+
+// ------------------------------------------------------------- peças (cada uma num grupo que a explodida desloca)
+const P = {}; for (const k of ['nacele', 'fan', 'comp', 'camara', 'turb', 'bocal', 'eixos']) { P[k] = new THREE.Group(); motor.add(P[k]); }
+
+// nacele (carenagem branca): perfil fechado, casca fina
+P.nacele.add(lathe([[-3.15, 1.8], [-2.7, 1.88], [-1.0, 1.9], [1.6, 1.82], [2.35, 1.62], [2.35, 1.68], [1.2, 2.04], [-1.0, 2.12], [-2.6, 2.06], [-3.05, 1.98], [-3.25, 1.88], [-3.15, 1.8]], M.nacele));
+P.nacele.add(lathe([[-2.9, 1.84], [2.3, 1.64]], M.naceleDentro));
+
+// ventilador: 16 pás largas e torcidas (GE9X: 16 pás de compósito) + cone
+function pa(r0, r1, corda, torcao, passo, seg = 14) {
+  const g = new THREE.PlaneGeometry(corda, r1 - r0, 4, seg); g.translate(0, (r0 + r1) / 2, 0);
+  const a = g.attributes.position;
+  for (let i = 0; i < a.count; i++) {
+    const x = a.getX(i), y = a.getY(i), k = (y - r0) / (r1 - r0);
+    const ang = passo + torcao * k, c = 1 - 0.25 * k; // largura diminui na ponta
+    const xc = x * c * (1 + 0.35 * Math.sin(Math.PI * k));
+    a.setXYZ(i, xc * Math.cos(ang), y, xc * Math.sin(ang) + 0.06 * Math.sin(Math.PI * (x / corda + 0.5)) );
+  }
+  g.computeVertexNormals(); return g;
+}
+function rotor(n, x, r0, r1, corda, torcao, passo, mat, pai) {
+  const g = pa(r0, r1, corda, torcao, passo);
+  const inst = new THREE.InstancedMesh(g, mat, n); const m4 = new THREE.Matrix4();
+  for (let i = 0; i < n; i++) { m4.makeRotationX((i / n) * Math.PI * 2); inst.setMatrixAt(i, m4); }
+  const gr = new THREE.Group(); gr.position.x = x; gr.add(inst); pai.add(gr); return gr;
+}
+const fan = rotor(16, -2.25, 0.5, 1.84, 0.62, 0.95, 0.25, M.fan, P.fan);
+const spin = lathe([[-3.05, 0.0], [-2.95, 0.18], [-2.75, 0.38], [-2.5, 0.5], [-2.15, 0.56], [-1.9, 0.56]], M.spinner, 96); P.fan.add(spin);
+P.fan.add(lathe([[-1.95, 0.56], [-1.55, 0.98], [-1.5, 0.98]], M.hub, 120)); // divisor do fluxo (bico do núcleo)
+
+// compressor: 10 estágios, cada vez menores (o ar é espremido)
+const estagios = [];
+for (let i = 0; i < 10; i++) {
+  const k = i / 9, x = lerp(-1.35, 0.85, k), r1 = lerp(0.88, 0.52, k), r0 = lerp(0.36, 0.42, k);
+  estagios.push(rotor(Math.round(lerp(34, 52, k)), x, r0, r1, 0.13, 0.6, 0.55, M.comp, P.comp));
+}
+P.comp.add(lathe([[-1.5, 0.34], [-1.0, 0.36], [0.95, 0.42]], M.hub, 96));
+// casca do núcleo (cortada em quarto para ver dentro)
+const casca = lathe([[-1.5, 0.98], [-0.6, 0.86], [0.95, 0.6], [1.0, 0.74], [1.95, 0.76], [2.0, 0.68], [2.4, 0.7], [3.35, 0.94], [3.5, 0.9], [4.25, 0.6]], M.casca, 160);
+P.comp.add(casca);
+
+// câmara de combustão: anel (liner) + chama + 18 bicos de combustível
+const liner = lathe([[1.02, 0.47], [1.15, 0.43], [1.85, 0.45], [1.95, 0.5], [1.95, 0.66], [1.85, 0.71], [1.15, 0.72], [1.02, 0.66], [1.02, 0.47]], M.liner, 120);
+P.camara.add(liner);
+const chamaMat = new THREE.MeshBasicMaterial({ color: 0xff7a1a, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+const chamas = [];
+for (let i = 0; i < 3; i++) { const c = lathe([[1.12, 0.5 + i * 0.02], [1.5, 0.52 + i * 0.03], [1.9, 0.5 + i * 0.02], [1.9, 0.66 - i * 0.02], [1.5, 0.66 - i * 0.03], [1.12, 0.64 - i * 0.02]], chamaMat.clone(), 90); c.material.color.setHex([0xff5a10, 0xff8a24, 0xffc070][i]); P.camara.add(c); chamas.push(c); }
+for (let i = 0; i < 18; i++) { const b = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.28, 10), M.hub); const a = (i / 18) * Math.PI * 2; b.position.set(1.0, Math.sin(a) * 0.59, Math.cos(a) * 0.59); b.rotation.z = Math.PI / 2; P.camara.add(b); }
+
+// turbina: 2 estágios de alta + 6 de baixa (maiores)
+const turbinas = [];
+for (let i = 0; i < 8; i++) {
+  const alta = i < 2, k = alta ? i : (i - 2) / 5;
+  const x = alta ? 2.08 + i * 0.18 : lerp(2.5, 3.28, k), r0 = alta ? 0.44 : lerp(0.45, 0.5, k), r1 = alta ? 0.64 : lerp(0.7, 0.88, k);
+  turbinas.push(rotor(alta ? 60 : 64, x, r0, r1, 0.11, -0.7, -0.6, M.quente, P.turb));
+}
+P.turb.add(lathe([[2.0, 0.42], [3.35, 0.48]], M.hub, 96));
+
+// bocal + cone de saída
+P.bocal.add(lathe([[3.35, 0.47], [3.9, 0.44], [4.5, 0.18], [4.68, 0.0]], M.bocal, 96));
+P.bocal.add(lathe([[3.48, 0.92], [4.28, 0.62], [4.3, 0.58]], M.bocal, 120));
+
+// dois eixos, um dentro do outro (NASA: two spool)
+const eixoBaixa = new THREE.Mesh(new THREE.CylinderGeometry(0.08, 0.08, 5.8, 24), metal(0xb8c0c8, { rough: 0.2, corta: false, extra: { emissive: new THREE.Color(0xfacc15), emissiveIntensity: 0 } }));
+eixoBaixa.rotation.z = Math.PI / 2; eixoBaixa.position.x = 0.55; P.eixos.add(eixoBaixa);
+const eixoAlta = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.16, 3.0, 32, 1, true), metal(0x8d969f, { rough: 0.25, corta: false, extra: { emissive: new THREE.Color(0xfacc15), emissiveIntensity: 0 } }));
+eixoAlta.rotation.z = Math.PI / 2; eixoAlta.position.x = 0.75; P.eixos.add(eixoAlta);
+
+// seta do empuxo (o motor é empurrado para a frente = -x)
+const seta = new THREE.Group();
+{ const m = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0 }); const c = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.09, 1.6, 20), m); c.rotation.z = Math.PI / 2; const p = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.55, 28), m); p.rotation.z = Math.PI / 2; p.position.x = -1.05; seta.add(c, p); seta.position.set(-0.6, 2.75, 0); motor.add(seta); seta.userData.m = m; }
+
+// ------------------------------------------------------------- o ar: partículas com cor pela temperatura
+const R = rng(42);
+function ar(n, raio, faixaPhi, xIni, xFim, tam, corDe, vel, perfilX) {
+  const g = new THREE.SphereGeometry(tam, 8, 6);
+  const m = new THREE.MeshStandardMaterial({ roughness: 0.4, transparent: true, opacity: 0, emissive: 0xffffff, emissiveIntensity: 0.0 });
+  const inst = new THREE.InstancedMesh(g, m, n); inst.frustumCulled = false; motor.add(inst);
+  const ps = [...Array(n)].map(() => ({ off: R(), phi: lerp(faixaPhi[0], faixaPhi[1], R()), rr: R(), j: R() }));
+  const M4 = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), Pp = new THREE.Vector3(), C = new THREE.Color();
+  return (t, opac) => {
+    inst.visible = opac > 0.01; m.opacity = opac; if (!inst.visible) return;
+    ps.forEach((p, i) => {
+      const s = ((p.off + t * vel) % 1 + 1) % 1, x = perfilX ? perfilX(s) : lerp(xIni, xFim, s);
+      const r = raio(x, p.rr), ph = p.phi + 0.15 * Math.sin(6 * s + p.j * 6);
+      Pp.set(x, Math.sin(ph) * r, Math.cos(ph) * r);
+      const fade = Math.min(1, s / 0.04, (1 - s) / 0.06);
+      S.set(1.6 + 2.2 * (vel > 0.2 ? 1 : 0.4), 1, 1).multiplyScalar(fade * (0.8 + 0.4 * p.j));
+      M4.compose(Pp, Q, S); inst.setMatrixAt(i, M4);
+      inst.setColorAt(i, corDe(x, C));
+    });
+    inst.instanceMatrix.needsUpdate = true; if (inst.instanceColor) inst.instanceColor.needsUpdate = true;
+  };
+}
+const FRIO = new THREE.Color(0x8fc4ff), BRANCO = new THREE.Color(0xf2f6ff), LARANJA = new THREE.Color(0xff7a1a), VERM = new THREE.Color(0xff4a12), MORNO = new THREE.Color(0xffb27a);
+const corNucleo = (x, C) => {
+  if (x < -1.4) return C.copy(FRIO);
+  if (x < 0.95) return C.copy(FRIO).lerp(BRANCO, ramp(x, -1.4, 0.95));
+  if (x < 1.9) return C.copy(BRANCO).lerp(LARANJA, ramp(x, 0.95, 1.3));
+  if (x < 3.4) return C.copy(LARANJA).lerp(VERM, ramp(x, 1.9, 3.4));
+  return C.copy(VERM).lerp(MORNO, ramp(x, 3.4, 6));
+};
+// o núcleo anda devagar no compressor (o ar se acumula) e rápido no bocal
+const xNucleo = (s) => s < 0.18 ? lerp(-4.6, -1.5, s / 0.18) : s < 0.55 ? lerp(-1.5, 0.95, (s - 0.18) / 0.37) : s < 0.68 ? lerp(0.95, 1.95, (s - 0.55) / 0.13) : s < 0.82 ? lerp(1.95, 3.4, (s - 0.68) / 0.14) : lerp(3.4, 7.5, (s - 0.82) / 0.18);
+const rNucleo = (x, u) => {
+  if (x < -2.2) return lerp(0.25, 1.1, u);
+  if (x < -1.5) return lerp(0.6, 0.95, u) * lerp(1, 0.95, ramp(x, -2.2, -1.5));
+  if (x < 0.95) { const k = ramp(x, -1.5, 0.95); return lerp(lerp(0.38, 0.44, k), lerp(0.86, 0.55, k), 0.15 + 0.7 * u); }
+  if (x < 1.95) return lerp(0.5, 0.65, u);
+  if (x < 3.4) { const k = ramp(x, 1.95, 3.4); return lerp(0.46, 0.5, k) + lerp(0.18, 0.36, k) * u; }
+  return lerp(0.2, 0.5, u) * lerp(1, 0.8, ramp(x, 3.4, 7.5));
+};
+const rFora = (x, u) => (x < -2.2 ? lerp(1.15, 1.75, u) : x < 2.3 ? lerp(lerp(1.05, 0.8, ramp(x, -1.5, 2.3)) + 0.06, 1.72 - 0.15 * ramp(x, 1.0, 2.3), 0.15 + 0.75 * u) : lerp(0.9, 1.6, u));
+const arNucleo = ar(170, rNucleo, [0.05, 1.5], 0, 0, 0.026, corNucleo, 0.11, xNucleo);
+const arFora = ar(220, rFora, [0.05, 1.5], -4.6, 6.0, 0.022, (x, C) => C.copy(FRIO), 0.34);
 
 // ------------------------------------------------------------- relógio da história
-const CORTES = ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8'].map((b, i) => (i ? B[b].ini - 0.12 : 0));
-const cena = (t) => { let k = 0; CORTES.forEach((c, i) => { if (t >= c) k = i; }); return k; };
-const DESCE = [F.titulo.fim + 0.1, F.titulo.fim + 1.3];
-const SOBE = [palavra('volta', 'vinte') - 0.1, palavra('volta', 'graus') + 0.3];
-const incl = (t) => 23.4 * (1 - io(ramp(t, ...DESCE))) + 23.4 * io(ramp(t, ...SOBE));
-const modo = (t) => io(ramp(t, DESCE[0] + 0.1, DESCE[1] + 0.1)) * (1 - io(ramp(t, SOBE[0] + 0.1, SOBE[1])));
+const T = {
+  abre: [F.bypass.ini - 0.2, F.bypass.ini + 1.3], fecha: [F.volta.ini + 0.1, F.volta.ini + 1.3],
+  explode: [F.pecas.ini - 0.2, F.pecas.ini + 1.4], junta: [F.volta.ini - 0.1, F.volta.ini + 1.1],
+};
+const alvo = (x, y, z = 0) => { motor.updateMatrixWorld(); return motor.localToWorld(v3(x, y, z)); };
+const C0 = [-34, 14, 27, alvo(0.6, 0.0).add(v3(0, 2.0, 0))];
+const camAnda = cameraPorChaves(camera, [
+  [0, ...C0], [F.titulo.fim + 0.6, -38, 12, 29, alvo(0.5, 0.0).add(v3(0, 1.6, 0))],
+  [F.fan.fim, -50, 8, 22, alvo(-1.2, 0.0).add(v3(0, 0.6, 0))],
+  [F.bypass.fim, -22, 18, 25, alvo(-0.2, 0.7)],
+  [F.compressor.fim, -14, 20, 25, alvo(-0.4, 0.9)],
+  [F.combustao.fim, -10, 22, 24, alvo(0.5, 0.9)],
+  [F.turbina.fim, -14, 20, 25, alvo(0.7, 0.8)],
+  [F.bocal.fim, -24, 16, 28, alvo(0.6, 0.8)],
+  [F.pecas.fim, -18, 14, 33, alvo(0.5, -0.6)],
+  [F.volta.ini + 1.3, ...C0],
+  [FIM, ...C0],
+]);
+const SAI = { nacele: v3(0, 3.4, 0), fan: v3(-2.4, 0, 0), comp: v3(-1.2, 0, 0), camara: v3(0.4, 0, 0), turb: v3(1.3, 0, 0), bocal: v3(2.4, 0, 0), eixos: v3(0, -1.6, 0) };
 
-// dia do ano mostrado no aparelho: [tempo, dia, curva]
-const DIAS = [
-  [0, 172], [F.sombra.ini, 172], [F.doze.fim, 537, 'io'],
-  [palavra('poa', 'dezembro') - 0.2, 537], [palavra('poa', 'dezembro') + 0.7, 720, 'io'],
-  [palavra('ferraz', 'junho') - 0.2, 720], [palavra('ferraz', 'junho') + 0.8, 902, 'io'],
-  [palavra('ferraz', 'dezembro') - 0.2, 902], [palavra('ferraz', 'dezembro') + 0.8, 1085, 'io'],
-  [palavra('janeiro', 'janeiro') - 0.2, 1085], [palavra('janeiro', 'janeiro') + 0.6, 1098, 'io'],
-  [F.volta.ini, 1098], [F.volta.fim + 0.2, 1632, 'io'],
-];
-function dia(t) {
-  for (let i = 1; i < DIAS.length; i++) {
-    const [t0, d0] = DIAS[i - 1], [t1, d1, e] = DIAS[i];
-    if (t <= t1) { const k = ramp(t, t0, t1); return lerp(d0, d1, e === 'io' ? io(k) : e ? k : (t >= t1 ? 1 : 0)); }
-  }
-  return DIAS[DIAS.length - 1][1];
-}
-const MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-const DIAS_MES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-function data(d) {
-  let n = ((Math.round(d) - 1) % 365 + 365) % 365, m = 0;
-  while (n >= DIAS_MES[m]) { n -= DIAS_MES[m]; m++; }
-  return `${String(n + 1).padStart(2, '0')} ${MESES[m]}`;
-}
-const declinacao = (d, tiltDeg) => tiltDeg * Math.sin((2 * Math.PI * (d - 80)) / 365);
-// direção do Sol para latitude φ, ângulo horário h (0 = meio-dia), declinação δ. Leste = +x, cima = +y, norte = -z.
-function sol(phi, h, dec) {
-  const p = phi * D2R, d = dec * D2R;
-  const e = -Math.cos(d) * Math.sin(h), n = Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(h) * Math.sin(p);
-  const u = Math.sin(d) * Math.sin(p) + Math.cos(d) * Math.cos(h) * Math.cos(p);
-  return v3(e, u, -n).normalize();
-}
+// etiquetas
+const pt = (grupo, x, y, z) => () => grupo.localToWorld(v3(x, y, z));
+const ETI = etiquetas([
+  { txt: 'Ventilador', sub: '16 pás (GE9X)', lado: 'e', y: 600, alvo: pt(P.fan, -2.25, 1.2, 0.6), de: palavra('fan', 'ventilador') - 0.1, ate: F.fan.fim + 0.3 },
+  { txt: 'Ar por fora', sub: 'a maior parte', lado: 'd', y: 620, alvo: pt(motor, 0.4, 1.0, 1.05), de: palavra('bypass', 'fora') - 0.4, ate: F.bypass.fim + 0.4, q: true },
+  { txt: 'Núcleo', lado: 'e', y: 1120, alvo: pt(motor, 0.3, 0.45, 0.45), de: palavra('bypass', 'núcleo') - 0.3, ate: F.bypass.fim + 0.4 },
+  { txt: 'Compressor', sub: '10 estágios', lado: 'e', y: 640, alvo: pt(P.comp, -0.4, 0.5, 0.5), de: palavra('compressor', 'espremido') - 0.2, ate: F.compressor.fim + 0.3 },
+  { txt: 'Câmara de<br>combustão', lado: 'd', y: 1090, alvo: pt(P.camara, 1.5, 0.42, 0.42), de: F.combustao.ini + 0.1, ate: F.combustao.fim + 0.3, q: true },
+  { txt: 'Turbina', lado: 'd', y: 1080, alvo: pt(P.turb, 2.9, 0.5, 0.5), de: palavra('turbina', 'turbina') - 0.2, ate: F.turbina.fim + 0.3 },
+  { txt: '2 eixos', sub: 'um dentro do outro', lado: 'e', y: 1200, alvo: pt(P.eixos, 0.3, 0.0, 0.1), de: palavra('turbina', 'eixos') - 0.3, ate: F.turbina.fim + 0.3, q: true },
+  { txt: 'Bocal', sub: 'o gás sai rápido', lado: 'd', y: 1150, alvo: pt(P.bocal, 4.0, 0.3, 0.3), de: F.bocal.ini + 0.1, ate: F.bocal.fim + 0.3 },
+  { txt: 'Empuxo', sub: 'para a frente', lado: 'e', y: 520, alvo: () => seta.localToWorld(v3(-0.9, 0, 0)), de: palavra('bocal', 'empurrado') - 0.2, ate: F.bocal.fim + 0.3, q: true },
+  { txt: 'Aspira', sub: 'ventilador', lado: 'e', y: 560, alvo: pt(P.fan, -2.25, 1.0, 0.4), de: palavra('pecas', 'aspira') - 0.1, ate: F.volta.ini + 0.4, q: true },
+  { txt: 'Comprime', sub: 'compressor', lado: 'e', y: 820, alvo: pt(P.comp, -0.2, 0.6, 0.3), de: palavra('pecas', 'comprime') - 0.1, ate: F.volta.ini + 0.4, q: true },
+  { txt: 'Queima', sub: 'combustão', lado: 'd', y: 1010, alvo: pt(P.camara, 1.5, 0.6, 0.3), de: palavra('pecas', 'queima') - 0.1, ate: F.volta.ini + 0.4, q: true },
+  { txt: 'Sopra', sub: 'turbina e bocal', lado: 'd', y: 1230, alvo: pt(P.bocal, 3.9, 0.35, 0.3), de: palavra('pecas', 'sopra') - 0.1, ate: F.volta.ini + 0.4, q: true },
+]);
+const elPress = document.getElementById('pressao');
 
-// ------------------------------------------------------------- luzes
-const hemi = new THREE.HemisphereLight(0xdfefff, 0x4a5a3a, 0.9); scene.add(hemi);
-const luz = new THREE.DirectionalLight(0xfff1d6, 2.6);
-luz.castShadow = true; luz.shadow.mapSize.set(2048, 2048);
-Object.assign(luz.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 1, far: 400 });
-luz.shadow.bias = -0.0006; scene.add(luz, luz.target);
-const discoSol = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshBasicMaterial({ color: COR.amarelo }));
-scene.add(discoSol);
-
-// ------------------------------------------------------------- peças
-const r = rng(7);
-function pessoa(cor = 0xc0563b) {
-  const g = new THREE.Group();
-  const pele = mat(0xc99a74, COR.eseFill2), roupa = mat(cor, COR.eseFill2), calca = mat(0x2c3e5a, COR.eseFill);
-  for (const x of [-0.17, 0.17]) { const p = solido(new THREE.CylinderGeometry(0.13, 0.12, 0.95, 8), calca); p.position.set(x, 0.48, 0); g.add(p); }
-  const tronco = solido(new THREE.CylinderGeometry(0.32, 0.27, 0.85, 10), roupa); tronco.position.y = 1.38; g.add(tronco);
-  for (const x of [-0.42, 0.42]) { const b = solido(new THREE.CylinderGeometry(0.09, 0.08, 0.78, 8), roupa); b.position.set(x, 1.32, 0); b.rotation.z = x > 0 ? 0.12 : -0.12; g.add(b); }
-  const cabeca = solido(new THREE.IcosahedronGeometry(0.25, 1), pele); cabeca.position.y = 2.05; g.add(cabeca);
-  return g;
-}
-function arvore(h = 3, s = 1.6) {
-  const g = new THREE.Group();
-  const tr = solido(new THREE.CylinderGeometry(0.18, 0.26, h, 7), mat(0x6b4a2e, COR.eseFill)); tr.position.y = h / 2; g.add(tr);
-  const copa = solido(new THREE.IcosahedronGeometry(s, 0), mat(0x4e8f3a, COR.eseFill2)); copa.position.y = h + s * 0.6; g.add(copa);
-  return g;
-}
-
-// CAMPO (cenas 0, 1, 8) — um gramado no Sul do Brasil (30°S)
-const campo = new THREE.Group(); scene.add(campo);
-const chao = solido(new THREE.CircleGeometry(160, 64), mat(0x6fa845, 0x223650), false, false);
-chao.rotation.x = -Math.PI / 2; campo.add(chao);
-const grade = new THREE.GridHelper(320, 80, COR.eseLinha, COR.eseLinha); grade.material.transparent = true; campo.add(grade);
-const gente = pessoa(); campo.add(gente);
-const gente2 = pessoa(0x3a6ea5); gente2.position.set(-2.6, 0, -3.5); gente2.scale.setScalar(0.92); campo.add(gente2);
-for (let i = 0; i < 26; i++) {
-  const a = Math.PI * (1.08 + r() * 0.84), d = 14 + r() * 60, t = arvore(2.4 + r() * 1.6, 1.3 + r() * 0.9);
-  t.position.set(Math.cos(a) * d, 0, Math.sin(a) * d - 6); campo.add(t);
-}
-const caminho = solido(new THREE.PlaneGeometry(2.2, 140), mat(0xd9c9a3, 0x1d2836), false, false);
-caminho.rotation.x = -Math.PI / 2; caminho.position.set(3.2, 0.02, -40); campo.add(caminho);
-// marcas da sombra de HOJE (com inclinação): meio-dia de junho e de dezembro em 30°S
-const marcas = new THREE.Group(); campo.add(marcas);
-function marca(len, txt) {
-  const linha = new THREE.Mesh(new THREE.PlaneGeometry(0.08, len), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
-  linha.rotation.x = -Math.PI / 2; linha.position.set(0, 0.03, len / 2); marcas.add(linha);
-  const fim = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.08), linha.material); fim.rotation.x = -Math.PI / 2; fim.position.set(0, 0.03, len); marcas.add(fim);
-  const l = rotulo(txt, { tam: 44, largura: 1.5 }); l.position.set(2.0, 0.3, len); marcas.add(l);
-  return { mat: linha.material, l };
-}
-const altura = 2.3; // altura da pessoa (sombra = altura / tan(elevação))
-const somb = (el) => altura / Math.tan(el * D2R);
-const mJun = marca(somb(90 - 30 - 23.4), 'JUN · HOJE'), mDez = marca(somb(90 - 30 + 23.4), 'DEZ · HOJE');
-const rotSemIncl = rotulo('SEM INCLINAÇÃO · O ANO TODO', { tam: 40, largura: 2.9, cor: '#FACC15' });
-campo.add(rotSemIncl);
-
-// PORTO ALEGRE (cena 2) — orla do Guaíba ao fim da tarde, chaminé da Usina do Gasômetro
-const cidade = new THREE.Group(); scene.add(cidade);
-const agua = solido(new THREE.PlaneGeometry(600, 300), mat(0x3f6f8f, 0x101823, { roughness: 0.35 }), false, false);
-agua.rotation.x = -Math.PI / 2; agua.position.set(0, 0, -150); cidade.add(agua);
-const cais = solido(new THREE.BoxGeometry(600, 1, 400), mat(0x8c8a80, COR.eseFill), false); cais.position.set(0, -0.5, 200); cidade.add(cais);
-for (let i = 0; i < 70; i++) {
-  const w = 3 + r() * 5, h = 6 + r() * (i % 9 === 0 ? 40 : 18), d = 3 + r() * 5;
-  const p = solido(new THREE.BoxGeometry(w, h, d), mat([0xd8cfc0, 0xb9a98f, 0xe6e0d4, 0x9aa4ad][i % 4], i % 2 ? COR.eseFill : COR.eseFill2));
-  p.position.set(-110 + (i % 35) * 6.4 + r() * 2, h / 2, 10 + Math.floor(i / 35) * 9 + r() * 4); cidade.add(p);
-}
-const usina = solido(new THREE.BoxGeometry(16, 9, 10), mat(0xa0522d, COR.eseFill2)); usina.position.set(18, 4.5, 2); cidade.add(usina);
-const chamine = solido(new THREE.CylinderGeometry(1.1, 1.8, 42, 12), mat(0xa0522d, COR.eseFill2)); chamine.position.set(26, 21, 2); cidade.add(chamine);
-const rotPoa = rotulo('PORTO ALEGRE · 30°S', { tam: 44, largura: 34 }); rotPoa.position.set(-40, 92, 30); cidade.add(rotPoa);
-
-// GLOBO (cenas 3 e 5) — continentes reais (Natural Earth)
-const R = 3;
-const giro = new THREE.Group(), globoG = new THREE.Group(); scene.add(giro); giro.add(globoG);
-const terra = globo(R); globoG.add(terra);
-const anelMat = (cor, op = 0.9) => new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: op });
-function paralelo(lat, cor, op) {
-  const m = new THREE.Mesh(new THREE.TorusGeometry(R * 1.004, 0.012, 6, 160), anelMat(cor, op));
-  m.rotation.x = Math.PI / 2; m.userData.lat = lat; globoG.add(m); return m;
-}
-const equador = paralelo(0, 0xffffff, 0.9);
-const tropN = paralelo(23.4, COR.amarelo, 0.9), tropS = paralelo(-23.4, COR.amarelo, 0.9);
-const polN = paralelo(66.6, 0x9cc3e6, 0.8), polS = paralelo(-66.6, 0x9cc3e6, 0.8);
-function poeLat(m, lat) { m.position.y = R * Math.sin(lat * D2R); const s = Math.max(1e-3, Math.cos(lat * D2R)); m.scale.set(s, s, 1); }
-const pinos = {};
-for (const [id, lat, lon, txt] of [['poa', -30.03, -51.23, 'PORTO ALEGRE'], ['manaus', -3.12, -60.02, 'MANAUS · ≈ 12 h O ANO TODO'], ['ferraz', -62.08, -58.4, 'EST. FERRAZ']]) {
-  const p = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 8), new THREE.MeshBasicMaterial({ color: id === 'manaus' ? COR.amarelo : 0xffffff }));
-  p.position.copy(noGlobo(lat, lon, R * 1.01)); globoG.add(p);
-  const l = rotulo(txt, { tam: 40, largura: 1.9 }); l.position.copy(noGlobo(lat, lon, R * 1.01)).add(v3(1.1, 0.16, 0.3)); globoG.add(l);
-  pinos[id] = { p, l };
-}
-const rotEq = rotulo('EQUADOR', { tam: 36, largura: 1.3 }); rotEq.position.copy(noGlobo(2.5, -38, R * 1.02)); globoG.add(rotEq);
-const rotTrop = rotulo('TRÓPICOS → EQUADOR', { tam: 40, largura: 3.2, cor: '#FACC15' }); scene.add(rotTrop);
-// estrelas (fixas, sem brilho)
-const estrelas = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(
-  Array.from({ length: 2400 }, () => { const a = r() * Math.PI * 2, b = Math.acos(2 * r() - 1); return [Math.sin(b) * Math.cos(a) * 1800, Math.cos(b) * 1800, Math.sin(b) * Math.sin(a) * 1800]; }).flat(), 3)),
-  new THREE.PointsMaterial({ color: 0xffffff, size: 2.2, sizeAttenuation: false, transparent: true, opacity: 0.75 }));
-scene.add(estrelas);
-
-// ANTÁRTIDA (cena 4) — Estação Comandante Ferraz, baía do Almirantado
-const anta = new THREE.Group(); scene.add(anta);
-const gelo = solido(new THREE.PlaneGeometry(500, 500, 40, 40), mat(0xeef3f7, 0x2b4462), false, false);
-gelo.rotation.x = -Math.PI / 2; { const p = gelo.geometry.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i); if (y > 30) p.setZ(i, (y - 30) * 0.25 * (0.6 + r() * 0.8)); } gelo.geometry.computeVertexNormals(); }
-anta.add(gelo);
-const mar = solido(new THREE.PlaneGeometry(500, 200), mat(0x2b4a63, 0x1b2c44, { roughness: 0.3 }), false, false);
-mar.rotation.x = -Math.PI / 2; mar.position.set(0, 0.05, 140); anta.add(mar);
-for (let i = 0; i < 9; i++) { const m = solido(new THREE.ConeGeometry(18 + r() * 22, 24 + r() * 30, 6), mat(0xdfe7ee, COR.eseFill2)); m.position.set(-160 + i * 40 + r() * 10, 10, -120 - r() * 60); anta.add(m); }
-for (let i = 0; i < 6; i++) {
-  const mod = solido(new THREE.BoxGeometry(6, 3.2, 4), mat(i % 2 ? 0xd9622b : 0x2f6f4f, COR.eseFill2));
-  mod.position.set(-14 + i * 6.3, 2.6, 8 + (i % 2) * 0.6); anta.add(mod);
-  const pe = solido(new THREE.BoxGeometry(5.6, 1, 0.4), mat(0x555a60, COR.eseFill)); pe.position.set(-14 + i * 6.3, 0.5, 8); anta.add(pe);
-}
-const rotFerraz = rotulo('ESTAÇÃO FERRAZ · 62°S', { tam: 44, largura: 15 }); rotFerraz.position.set(-6, 36, 8); anta.add(rotFerraz);
-
-// CÚPULA DO CÉU (cenas 2 e 4) — o caminho do Sol em junho e em dezembro, que vira um só sem inclinação
-function cupula(lat, raio, rotJ, rotD, rotIgual) {
-  const g = new THREE.Group();
-  const linha = (op) => new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: op, depthWrite: false });
-  const horiz = new THREE.Mesh(new THREE.TorusGeometry(raio, raio * 0.006, 6, 160), linha(0.7)); horiz.rotation.x = Math.PI / 2; g.add(horiz);
-  for (const a of [0, Math.PI / 2]) { const m = new THREE.Mesh(new THREE.TorusGeometry(raio, raio * 0.003, 4, 120, Math.PI), linha(0.28)); m.rotation.y = a; g.add(m); }
-  const casca = new THREE.Mesh(new THREE.SphereGeometry(raio, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2),
-    new THREE.MeshBasicMaterial({ color: 0x9cc3e6, transparent: true, opacity: 0.07, side: THREE.DoubleSide, depthWrite: false }));
-  g.add(casca);
-  const matJ = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
-  const matD = new THREE.MeshBasicMaterial({ color: COR.amarelo, transparent: true, opacity: 0.95 });
-  const arcos = [new THREE.Mesh(new THREE.BufferGeometry(), matJ), new THREE.Mesh(new THREE.BufferGeometry(), matD)];
-  arcos.forEach((a) => g.add(a));
-  const bola = new THREE.Mesh(new THREE.SphereGeometry(raio * 0.05, 24, 12), new THREE.MeshBasicMaterial({ color: COR.amarelo })); g.add(bola);
-  const lJ = rotulo(rotJ, { tam: 44, largura: raio * 0.62 }), lD = rotulo(rotD, { tam: 44, largura: raio * 0.62, cor: '#FACC15' });
-  const lI = rotulo(rotIgual, { tam: 44, largura: raio * 0.9, cor: '#FACC15' });
-  g.add(lJ, lD, lI);
-  const pontos = (dec) => {
-    const c = clamp(-Math.tan(lat * D2R) * Math.tan(dec * D2R), -1, 1), H0 = Math.acos(c);
-    const n = 64, out = [];
-    for (let k = 0; k <= n; k++) out.push(sol(lat, lerp(-H0, H0, k / n), dec).multiplyScalar(raio));
-    return out;
-  };
-  const topo = (pts) => pts.reduce((a, b) => (b.y > a.y ? b : a));
-  // junta: 0 = arcos de hoje (±23,4°), 1 = os dois viraram o do equinócio (0°)
-  g.userData.set = (junta, sol01, qual, op) => {
-    const decs = [23.4 * (1 - junta), -23.4 * (1 - junta)]; // junho (δ +), dezembro (δ −) — hemisfério sul
-    const pts = decs.map(pontos);
-    arcos.forEach((a, k) => { a.geometry.dispose(); a.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts[k]), 80, raio * 0.012, 6); });
-    matJ.opacity = 0.95 * op; matD.opacity = 0.95 * op;
-    const tJ = topo(pts[0]), tD = topo(pts[1]);
-    lJ.position.copy(tJ).add(v3(0, raio * 0.1, 0)); lD.position.copy(tD).add(v3(0, raio * 0.12, 0));
-    lI.position.copy(tD).add(v3(0, raio * 0.14, 0));
-    const pa = pts[qual]; const idx = Math.min(pa.length - 1, Math.floor(sol01 * (pa.length - 1)));
-    bola.position.copy(pa[idx]); bola.visible = op > 0.05;
-    return { lJ, lD, lI };
-  };
-  [horiz, casca].forEach((m) => (m.userData.op = m.material.opacity));
-  g.userData.fade = (op) => { horiz.material.opacity = 0.7 * op; casca.material.opacity = 0.07 * op; };
-  return g;
-}
-const cupPoa = cupula(-30, 70, 'JUN · ≈ 10 h', 'DEZ · ≈ 14 h', 'SEM INCLINAÇÃO · ≈ 12 h'); cupPoa.position.set(0, 0, 20); cidade.add(cupPoa);
-const cupFerraz = cupula(-62, 26, 'JUN · ≈ 5 h', 'DEZ · ≈ 20 h', 'SEM INCLINAÇÃO · ≈ 12 h'); cupFerraz.position.set(4, 0, 8); anta.add(cupFerraz);
-// marca o ritmo da cena da cúpula: hoje (junho → dezembro) e depois sem inclinação
-function animaCupula(c, t, fJun, fDez, fJunta) {
-  const tJ = palavra(fJun[0], fJun[1]), tD = palavra(fDez[0], fDez[1]), tI = F[fJunta].ini;
-  const junta = io(ramp(t, tI + 0.2, tI + 1.6));
-  const qual = t < tD - 0.2 ? 0 : 1;
-  const ini = qual === 0 ? tJ - 0.3 : tD - 0.3, fim = qual === 0 ? tD - 0.3 : tI + 2.5;
-  const r = c.userData.set(junta, ramp(t, ini, fim), junta > 0.5 ? 1 : qual, 1);
-  r.lJ.material.opacity = win(t, tJ - 0.2, tI + 0.4) ; r.lD.material.opacity = win(t, tD - 0.2, tI + 0.4);
-  r.lI.material.opacity = out3(ramp(t, tI + 1.2, tI + 1.7));
-}
-
-// POLO (cena 6)
-const polo = new THREE.Group(); scene.add(polo);
-const plano = solido(new THREE.CircleGeometry(400, 64), mat(0xeef3f7, 0x2b4462), false, false); plano.rotation.x = -Math.PI / 2; polo.add(plano);
-const gradeP = new THREE.PolarGridHelper(60, 16, 6, 64, COR.eseLinha, COR.eseLinha); gradeP.material.transparent = true; gradeP.material.opacity = 0.35; polo.add(gradeP);
-const estaca = solido(new THREE.CylinderGeometry(0.08, 0.08, 3, 8), mat(0xbbbbbb, COR.eseFill2)); estaca.position.y = 1.5; polo.add(estaca);
-const bola = solido(new THREE.SphereGeometry(0.35, 16, 8), mat(0xc8c8c8, COR.eseFill2)); bola.position.y = 3.2; polo.add(bola);
-for (let i = 0; i < 40; i++) { const b = solido(new THREE.DodecahedronGeometry(0.6 + r() * 1.6, 0), mat(0xe2eaf1, COR.eseFill2)); const a = r() * 6.28, d = 8 + r() * 50; b.position.set(Math.cos(a) * d, 0.2, Math.sin(a) * d); b.scale.y = 0.4; polo.add(b); }
-const trilhaSol = new THREE.Mesh(new THREE.TorusGeometry(180, 0.35, 6, 200), anelMat(COR.amarelo, 0.7)); trilhaSol.rotation.x = Math.PI / 2; trilhaSol.position.y = 2; polo.add(trilhaSol);
-const rotPolo = rotulo('O SOL RODA NO HORIZONTE', { tam: 44, largura: 6.4, cor: '#FACC15' }); polo.add(rotPolo);
-
-// JÚPITER (cena 7) — sozinho, sem comparação de tamanho falsa
-const jup = new THREE.Group(); scene.add(jup);
-const faixas = (() => {
-  const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const g = c.getContext('2d');
-  const cores = ['#d9c3a0', '#b98a5e', '#efe3cc', '#a8744c', '#e8d6b6', '#c49a6c', '#f2e8d5', '#9c6a45', '#e0c9a6', '#c7a27a'];
-  for (let y = 0; y < 512; y += 4) { const k = Math.floor((Math.sin(y * 0.045) * 0.5 + 0.5) * 9.99 + (y % 37 === 0 ? 1 : 0)) % 10; g.fillStyle = cores[k]; g.fillRect(0, y, 1024, 4); }
-  g.fillStyle = '#b5523b'; g.beginPath(); g.ellipse(700, 340, 60, 28, 0, 0, Math.PI * 2); g.fill();
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-})();
-const jupiter = new THREE.Mesh(new THREE.SphereGeometry(3, 96, 48), new THREE.MeshStandardMaterial({ map: faixas, roughness: 0.95 })); jup.add(jupiter);
-const eixoJ = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 9, 8), anelMat(COR.amarelo, 1)); jup.add(eixoJ);
-const vertJ = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 9, 6), anelMat(0xffffff, 0.5)); jup.add(vertJ);
-const rotJ = rotulo('JÚPITER · 3°', { tam: 48, largura: 3.4, cor: '#FACC15' }); rotJ.position.set(0, 5.6, 0); jup.add(rotJ);
-const rotJT = rotulo('TERRA HOJE · 23,4°', { tam: 40, largura: 3.0 }); rotJT.position.set(0, 4.85, 0); jup.add(rotJT);
-
-const GRUPOS = [campo, cidade, giro, anta, polo, jup];
-const so = (...gs) => GRUPOS.forEach((g) => (g.visible = gs.includes(g)));
-
-// ------------------------------------------------------------- aparelho (DOM)
-const apNum = document.getElementById('ap-num'), apEixo = document.getElementById('ap-eixo');
-const apDia = document.getElementById('ap-dia'), apData = document.getElementById('ap-data');
-function aparelho(t) {
-  const i = incl(t), d = dia(t);
-  apNum.textContent = `${i.toFixed(1).replace('.', ',')}°`;
-  apEixo.setAttribute('transform', `rotate(${i.toFixed(2)} 50 50)`);
-  apDia.textContent = `DIA ${((Math.round(d) - 1) % 365) + 1}`;
-  apData.textContent = data(d);
-}
-
-// ------------------------------------------------------------- câmera
-const cam = (p, alvo, fov = 38) => { camera.position.copy(p); camera.fov = fov; camera.updateProjectionMatrix(); camera.lookAt(alvo); };
-
-// ------------------------------------------------------------- quadro no tempo t
+// ------------------------------------------------------------- um quadro
 function renderAt(t) {
-  t = clamp(t, 0, FIM);
-  const k = cena(t), m = modo(t), i = incl(t), d = dia(t);
-  aparencia(m); ceuDome.set(m); terra.userData.set(m);
-  grade.material.opacity = 0.28 * m; scene.fog = null;
-  estrelas.visible = false; ceuDome.mesh.visible = true;
-  hemi.intensity = lerp(0.95, 0.85, m); luz.intensity = lerp(2.6, 2.1, m); luz.color.set(0xfff1d6);
-  discoSol.visible = true;
+  // giro (o ventilador mais lento que o núcleo: eixos diferentes)
+  const ang = t * 2.2; fan.rotation.x = ang; spin.rotation.x = ang; turbinas.slice(2).forEach((g) => (g.rotation.x = ang));
+  estagios.forEach((g, i) => (g.rotation.x = i < 3 ? ang : -t * 3.4)); turbinas.slice(0, 2).forEach((g) => (g.rotation.x = -t * 3.4));
 
-  // sol do campo: 30°S; ao meio-dia, com a declinação do dia
-  const dirCampo = (h) => sol(-30, h, declinacao(d, i));
+  // corte em quarto
+  const k = io(ramp(t, ...T.abre)) * (1 - io(ramp(t, ...T.fecha)));
+  const c = lerp(2.6, 0.0, k) + (k < 0.001 ? 99 : 0);
+  motor.updateMatrixWorld(true);
+  PL1.constant = c; PL2.constant = c;
+  cl1.copy(PL1).applyMatrix4(motor.matrixWorld); cl2.copy(PL2).applyMatrix4(motor.matrixWorld);
 
-  if (k === 0 || k === 1 || k === 8) {
-    so(campo);
-    const h = k === 1 ? 0 : -0.35; // cena 1 = meio-dia; capa = começo da tarde
-    const s = dirCampo(h);
-    luz.position.copy(s.clone().multiplyScalar(120)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(900)); discoSol.scale.setScalar(26);
-    gente.rotation.y = 0.35; gente2.visible = k !== 1;
-    const vel = k === 1 ? ramp(t, CORTES[1], CORTES[2]) : k === 8 ? ramp(t, CORTES[8], FIM) : ramp(t, 0, CORTES[1]);
-    if (k === 1) cam(v3(lerp(10.5, 9.6, io(vel)), lerp(9.5, 8.6, vel), lerp(2.4, 2.0, io(vel))), v3(0.4, -1.3, 1.7), 40);
-    else {
-      // capa e volta usam a MESMA câmera no começo e no fim (o reel volta ao começo)
-      const z = k === 0 ? out3(vel) * 0.06 : 0.06 * (1 - io(ramp(t, SOBE[1], FIM - 0.3)));
-      cam(v3(lerp(5.0, 4.6, z / 0.06), lerp(2.6, 2.5, z / 0.06), lerp(10.5, 9.6, z / 0.06)), v3(-0.6, 2.2, -2), 40);
-    }
-    const marc = k === 1 ? win(t, F.sombra.ini + 0.4, CORTES[2], 0.5, 0.3) : 0;
-    mJun.mat.opacity = marc; mJun.l.material.opacity = marc; mDez.l.material.opacity = marc;
-    rotSemIncl.material.opacity = k === 1 ? win(t, palavra('sombra', 'nunca') - 0.1, F.doze.ini, 0.4, 0.3) : 0;
-    rotSemIncl.position.set(-1.2, 0.3, somb(60) + 0.55);
-  } else if (k === 2) {
-    so(cidade);
-    const fase = ramp(t, CORTES[2], CORTES[3]);
-    const s = sol(-30, lerp(1.05, 1.25, fase), declinacao(d, i)); // fim de tarde
-    luz.position.copy(s.clone().multiplyScalar(300)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(1500)); discoSol.scale.setScalar(40);
-    cam(v3(lerp(150, 125, io(fase)), lerp(150, 135, fase), lerp(345, 315, io(fase))), v3(0, 22, 0), 42);
-    rotPoa.material.opacity = win(t, CORTES[2] + 0.2, F.poa.ini + 1.2);
-    animaCupula(cupPoa, t, ['poa', 'junho'], ['poa', 'dezembro'], 'poa2');
-    discoSol.visible = false; hemi.intensity = 1.1;
-  } else if (k === 3 || k === 5) {
-    so(giro); estrelas.visible = true; ceuDome.mesh.visible = false; scene.background = new THREE.Color(0x05070c);
-    hemi.intensity = 1.1; luz.intensity = 2.4;
-    const fase = ramp(t, CORTES[k], CORTES[k + 1]);
-    const sDir = v3(-1, 0.0, 0.55).normalize(); // a luz vem do Sol, à esquerda
-    luz.position.copy(sDir.clone().multiplyScalar(50)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(sDir.clone().multiplyScalar(420)); discoSol.scale.setScalar(k === 5 ? 9 : 0.001);
-    // gira a América do Sul para a frente da câmera
-    globoG.rotation.y = (lerp(48, 62, fase) + (k === 5 ? 20 : 0)) * D2R;
-    giro.rotation.x = (k === 3 ? lerp(-12, -22, io(fase)) : -8) * D2R;
-    // eixo da Terra: inclinado pela variável incl (zero aqui)
-    giro.rotation.z = -i * D2R;
-    // trópicos e círculos polares: fecham no equador e nos polos (sem inclinação)
-    const fecha = k === 5 ? io(ramp(t, palavra('planeta', 'verão') - 0.3, palavra('planeta', 'inverno') + 0.6)) : 0;
-    const lt = 23.4 * (1 - fecha), lp = 66.6 + 23.4 * fecha;
-    poeLat(equador, 0); poeLat(tropN, lt); poeLat(tropS, -lt); poeLat(polN, lp); poeLat(polS, -lp);
-    for (const m2 of [tropN, tropS, polN, polS]) m2.visible = k === 5;
-    rotTrop.material.opacity = k === 5 ? win(t, palavra('planeta', 'verão'), F.janeiro.ini, 0.4, 0.3) : 0;
-    rotTrop.position.set(0, R * 1.02 * Math.sin(lt * D2R) + 0.45, R * 0.9);
-    rotEq.material.opacity = k === 3 ? win(t, palavra('manaus', 'equador') - 0.2, CORTES[4]) : 0;
-    for (const [id, pn] of Object.entries(pinos)) {
-      const on = k === 3 ? (id === 'manaus' ? 1 : 0.55) * win(t, CORTES[3] + 0.3, CORTES[4]) : 0;
-      pn.p.visible = on > 0.01; pn.l.material.opacity = on;
-    }
-    // janeiro: o lado iluminado ganha um pouco mais de luz (+7%), sem pintar o globo
-    const pulso = k === 5 ? Math.sin(clamp((t - palavra('janeiro', 'janeiro')) / 1.6) * Math.PI) : 0;
-    luz.intensity = 2.4 * (1 + 0.25 * pulso);
-    const dist = k === 3 ? lerp(19.5, 16.5, io(fase)) : lerp(22, 19.5, io(fase));
-    cam(v3(k === 3 ? 0.3 : -0.8, k === 3 ? -1.4 : -1.6, dist), v3(k === 3 ? 0.3 : -0.2, k === 3 ? -1.4 : -2.4, 0), 36);
-  } else if (k === 4) {
-    so(anta); hemi.intensity = 1.25;
-    const fase = ramp(t, CORTES[4], CORTES[5]);
-    const s = sol(-62, lerp(-1.0, -0.8, fase), -23.4 * (1 - m)); // junho: Sol baixo
-    luz.position.copy(s.clone().multiplyScalar(300)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(1500)); discoSol.scale.setScalar(36);
-    cam(v3(lerp(58, 50, io(fase)), lerp(60, 54, fase), lerp(128, 116, io(fase))), v3(4, 6, 0), 42);
-    rotFerraz.material.opacity = win(t, CORTES[4] + 0.2, F.ferraz.ini + 1.6);
-    animaCupula(cupFerraz, t, ['ferraz', 'junho'], ['ferraz', 'dezembro'], 'ferraz2');
-    discoSol.visible = false;
-  } else if (k === 6) {
-    so(polo);
-    const fase = ramp(t, CORTES[6], CORTES[7]);
-    const ca = lerp(0.6, 1.3, io(fase));
-    const az = -ca + lerp(-0.32, 0.32, fase); // o Sol desliza rente ao horizonte, na frente da câmera
-    const s = v3(Math.sin(az), 0.012, -Math.cos(az)).normalize();
-    luz.position.copy(s.clone().multiplyScalar(300).add(v3(0, 6, 0))); luz.target.position.set(0, 0, 0);
-    luz.intensity = 1.6; hemi.intensity = 0.6;
-    discoSol.position.copy(s.clone().multiplyScalar(170)).setY(5); discoSol.scale.setScalar(7);
-    cam(v3(Math.sin(ca) * 22, lerp(6, 4.5, fase), Math.cos(ca) * 22), v3(0, 3.2, 0), 44);
-    rotPolo.material.opacity = win(t, palavra('polos', 'rolando') - 0.5, CORTES[7]);
-    rotPolo.position.copy(s.clone().multiplyScalar(60)).setY(9);
-  } else if (k === 7) {
-    so(jup); estrelas.visible = true; ceuDome.mesh.visible = false; scene.background = new THREE.Color(0x05070c);
-    const fase = ramp(t, CORTES[7], CORTES[8]);
-    hemi.intensity = 0.3; luz.intensity = 2.8;
-    const sDir = v3(-1, 0.1, 0.6).normalize(); luz.position.copy(sDir.clone().multiplyScalar(60)); luz.target.position.set(0, 0, 0);
-    discoSol.visible = false;
-    jupiter.rotation.y = t * 0.35; jup.rotation.z = -3.1 * D2R; vertJ.rotation.z = 3.1 * D2R;
-    eixoJ.material.opacity = out3(ramp(t, palavra('jupiter', 'inclinado') - 0.2, palavra('jupiter', 'inclinado') + 0.4));
-    vertJ.material.opacity = 0.5 * eixoJ.material.opacity;
-    rotJ.material.opacity = win(t, palavra('jupiter', 'três') - 0.1, CORTES[8]);
-    rotJT.material.opacity = 0.85 * win(t, palavra('jupiter', 'três') + 0.4, CORTES[8]);
-    cam(v3(0, -0.4, lerp(25, 22.5, io(fase))), v3(0, 0.6, 0), 38);
-  }
-  if (!estrelas.visible) scene.background = null;
+  // explodida (as peças andam no eixo; a nacele sobe)
+  const ex = io(ramp(t, ...T.explode)) * (1 - io(ramp(t, ...T.junta)));
+  for (const [nome, d] of Object.entries(SAI)) P[nome].position.copy(d).multiplyScalar(ex);
+  if (ex > 0.001) { cl1.copy(PL1).applyMatrix4(motor.matrixWorld); cl2.copy(PL2).applyMatrix4(motor.matrixWorld); }
 
-  aparelho(t);
+  // fogo: liga na fala da combustão e fica aceso (pulsa sem acaso: soma de senos)
+  const fogo = ramp(t, F.combustao.ini - 0.2, palavra('combustao', 'queima') + 0.3) * (1 - ramp(t, F.volta.ini, F.volta.ini + 0.8));
+  chamas.forEach((m, i) => { m.material.opacity = fogo * (0.32 + 0.1 * Math.sin(t * 9 + i * 2) + 0.06 * Math.sin(t * 23 + i)); m.scale.set(1, 1 + 0.03 * Math.sin(t * 13 + i), 1 + 0.03 * Math.sin(t * 13 + i)); });
+  M.quente.emissiveIntensity = 0.9 * fogo;
+  // eixos em destaque
+  const kE = win(t, palavra('turbina', 'eixos') - 0.4, F.turbina.fim + 0.4, 0.4, 0.4);
+  eixoBaixa.material.emissiveIntensity = 0.8 * kE; eixoAlta.material.emissiveIntensity = 0.55 * kE;
+  // seta do empuxo
+  seta.userData.m.opacity = win(t, palavra('bocal', 'empurrado') - 0.3, F.bocal.fim + 0.3, 0.3, 0.3);
+  seta.visible = seta.userData.m.opacity > 0.01;
+  seta.position.x = -0.6 - 0.3 * out3(ramp(t, palavra('bocal', 'empurrado') - 0.3, palavra('bocal', 'empurrado') + 0.6));
+
+  // ar
+  const opAr = win(t, F.fan.ini + 0.3, F.pecas.ini + 0.2, 0.6, 0.5);
+  arFora(t, opAr * (t < F.compressor.ini ? 1 : 0.45));
+  arNucleo(t, opAr * (t < F.bypass.ini ? 0.5 : 1));
+
+  // contador da pressão (×1 → ×60 na palavra "sessenta")
+  const pr = lerp(1, 60, io(ramp(t, F.compressor.ini + 1.2, palavra('compressor', 'sessenta') + 0.2)));
+  elPress.textContent = `×${Math.round(pr)}`;
+
+  camAnda(t);
+  ETI(t, camera);
   cartoes(t, F, B);
-  legenda(t < F.titulo.fim + 0.4 ? -1 : t, LEG); // na capa o título já está escrito
+  legenda(t < F.titulo.fim + 0.6 ? -1 : t, LEG);
   renderer.render(scene, camera);
 }
 
-ligar('terra-sem-inclinacao', renderAt);
+ligar('motor-jato-por-dentro', renderAt);

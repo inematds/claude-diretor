@@ -1,0 +1,13 @@
+Um motor a jato por dentro ✈️
+
+Aspira, comprime, queima e sopra:
+• O ventilador do GE9X tem 3,4 m — mais largo que um Boeing 737
+• Cerca de 10 vezes mais ar passa por fora do núcleo do que por dentro
+• O compressor espreme o ar até 60 vezes a pressão de entrada
+• O gás quente gira a turbina, que gira compressor e ventilador por dois eixos, um dentro do outro
+• No bocal o gás sai rápido e o avião é empurrado para a frente
+
+Fontes: NASA Glenn e GE Aerospace.
+Motor 3D feito só com código, voz local. Série "Como funciona por dentro" — tem mais no inema.club.
+
+#aviacao #motorajato #engenharia #3d #inema

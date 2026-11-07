@@ -1,374 +1,334 @@
-// "E se a Terra não tivesse inclinação?" — o mundo 3D do reel, desenhado só a partir do tempo do vídeo.
-// Fatos usados: fatos.md (F1–F12). Cenas: campo → sombra → Porto Alegre → globo (Manaus) → Antártida (Ferraz)
-// → planeta (+7% em janeiro) → polo → Júpiter → volta (o último quadro repete o primeiro).
+// "Seu coração por dentro" — coração 3D feito só com código, desenhado a partir do tempo do vídeo.
+// Fatos: fatos.md (F1–F8). Vista de frente: o lado DIREITO da pessoa fica à ESQUERDA da tela (x < 0).
+// Cenas: capa → 100 mil batidas → abre (4 câmaras) → sangue azul (direito → pulmões) → vermelho (esquerdo → aorta)
+// → válvulas (tum-tá) → sinal elétrico → vista explodida → fecha e volta à capa (último quadro = primeiro).
 import {
-  THREE, W, H, D2R, clamp, lerp, ramp, io, out3, win, v3, rng, COR,
-  criarMundo, mat, solido, aparencia, ceu, globo, noGlobo, rotulo, legenda, cartoes, ligar,
+  THREE, W, H, D2R, clamp, lerp, ramp, io, out3, win, v3, rng, criarMundo, legenda, cartoes, ligar,
 } from '../motor/base.js';
 import { FIM, BLOCOS as B, FRASES as F, LEG, palavra } from './tempos.js';
+import { estudio, cameraPorChaves, etiquetas, fluxo, texturaFibras } from './oficina.js';
 
 const { renderer, scene, camera } = criarMundo();
-const ceuDome = ceu(scene);
+camera.fov = 30; camera.updateProjectionMatrix();
+estudio(renderer, scene, { env: 0.6, centro: '#1d2533', cy: 0.52 });
+
+// ------------------------------------------------------------- o batimento (70/min — normal em repouso, F8)
+const BPM = 70, FREQ = BPM / 60;
+const fase = (t) => ((t * FREQ) % 1 + 1) % 1;
+const bump = (p, a, b) => (p < a || p > b ? 0 : Math.sin(Math.PI * (p - a) / (b - a)));
+const atrio = (t) => bump(fase(t), 0.0, 0.15);       // átrios contraem primeiro (F7)
+const vent = (t) => bump(fase(t), 0.17, 0.48);       // depois os ventrículos
+const avAberta = (t) => { const p = fase(t); return p < 0.16 ? 1 : p < 0.2 ? 1 - ramp(p, 0.16, 0.2) : p < 0.5 ? 0 : ramp(p, 0.5, 0.56); };
+const slAberta = (t) => { const p = fase(t); return p < 0.2 ? 0 : p < 0.25 ? ramp(p, 0.2, 0.25) : p < 0.45 ? 1 : 1 - ramp(p, 0.45, 0.49); };
+const sm = (a, b, x) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+let VV = 0, AA = 0; // contração do quadro atual
+function deforma(p) {
+  const Y = p.y, wv = sm(0.6, 0.1, Y), wa = sm(0.3, 0.65, Y);
+  const s = 1 - 0.075 * VV * wv - 0.07 * AA * wa;
+  p.x *= s; p.z *= s; p.y = Y + VV * wv * 0.05 * (0.6 - Y);
+  return p;
+}
+
+// ------------------------------------------------------------- a forma (esfera deformada; ápice para baixo no eixo local)
+function forma(x, y, z) {
+  const Y = y * 1.72 - 0.28, t = (y + 1) / 2, base = Math.min(1, t * 1.6);
+  const larg = 1.62 * (0.72 + 0.28 * base), prof = 1.18 * (0.75 + 0.25 * base);
+  let X = x * larg, Z = z * prof;
+  const n = new THREE.Vector3(x, y * 0.5, z).normalize();
+  const xg = -0.05 + (0.3 - Y) * 0.2;                                           // sulco interventricular anterior
+  let d = 0.07 * Math.exp(-((X - xg) ** 2) / 0.018) * sm(0.0, 0.5, z) * (Y < 0.4 ? 1 : 0);
+  d += 0.08 * Math.exp(-((Y - 0.38) ** 2) / 0.012);                               // sulco atrioventricular
+  d += 0.12 * Math.exp(-(X * X) / 0.05) * sm(0.7, 1.3, Y);                        // dobra entre os átrios
+  d -= 0.028 * Math.sin(3.1 * X + 1.3) * Math.sin(2.7 * Y + 0.4) * Math.sin(3.3 * Z + 2.1); // irregular, orgânico
+  return new THREE.Vector3(X - n.x * d, Y - n.y * d, Z - n.z * d);
+}
+
+// ------------------------------------------------------------- grupos
+const coracao = new THREE.Group(); coracao.rotation.z = 0.38; coracao.position.set(0.15, 0, 0); scene.add(coracao);
+const tras = new THREE.Group(); coracao.add(tras);                     // metade de trás (fica)
+const dobra = new THREE.Group(); dobra.position.set(-1.7, 0, 0); coracao.add(dobra); // dobradiça da "porta"
+const frente = new THREE.Group(); frente.position.set(1.7, 0, 0); dobra.add(frente); // metade da frente (abre)
+const PL_TRAS = new THREE.Plane(new THREE.Vector3(0, 0, -1), 0), PL_FRENTE = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+const clipTras = new THREE.Plane(), clipFrente = new THREE.Plane();
+
+// ------------------------------------------------------------- materiais
+const fibras = texturaFibras({ base: '#7c1820', seed: 7 });
+const corte = texturaFibras({ base: '#8c2830', claro: 'rgba(255,190,180,0.14)', escuro: 'rgba(60,0,8,0.25)', ang: 0.9, seed: 11, n: 1400 });
+const musculo = (clip) => new THREE.MeshPhysicalMaterial({
+  color: 0xffffff, map: fibras, bumpMap: fibras, bumpScale: 1.2, roughness: 0.42, metalness: 0,
+  clearcoat: 0.6, clearcoatRoughness: 0.32, sheen: 0.4, sheenColor: new THREE.Color(0xff9a9a), sheenRoughness: 0.6,
+  side: THREE.DoubleSide, clippingPlanes: [clip],
+});
+const vaso = (cor, clip) => new THREE.MeshPhysicalMaterial({ color: cor, roughness: 0.38, clearcoat: 0.5, clearcoatRoughness: 0.3, side: THREE.DoubleSide, clippingPlanes: clip ? [clip] : [] });
+
+// ------------------------------------------------------------- casca do coração (uma geometria, duas metades)
+const casca = new THREE.SphereGeometry(1, 160, 120);
+const P0 = casca.attributes.position.array.slice();
+const FORMA0 = new Float32Array(P0.length);
+for (let i = 0; i < P0.length; i += 3) { const p = forma(P0[i], P0[i + 1], P0[i + 2]); FORMA0.set([p.x, p.y, p.z], i); }
+casca.attributes.position.array.set(FORMA0); casca.computeVertexNormals();
+tras.add(new THREE.Mesh(casca, musculo(clipTras)));
+frente.add(new THREE.Mesh(casca, musculo(clipFrente)));
+
+// aurículas (as "orelhas" dos átrios), na frente
+function auricula(px, py, pz, sx, sy, sz, rz) {
+  const g = new THREE.SphereGeometry(1, 48, 32); const a = g.attributes.position;
+  for (let i = 0; i < a.count; i++) { const x = a.getX(i), y = a.getY(i); a.setY(i, y + 0.25 * Math.sin(x * 3)); a.setX(i, x * (1 + 0.15 * Math.sin(y * 5))); }
+  g.computeVertexNormals();
+  const m = new THREE.Mesh(g, musculo(clipFrente)); m.scale.set(sx, sy, sz); m.position.set(px, py, pz); m.rotation.z = rz;
+  frente.add(m); return m;
+}
+const aurD = auricula(-1.08, 0.98, 0.55, 0.42, 0.24, 0.26, 0.5);
+const aurE = auricula(1.02, 0.72, 0.62, 0.36, 0.2, 0.22, -0.7);
+
+// ------------------------------------------------------------- o corte: placa com os 4 buracos (câmaras)
+const CAM = {
+  AD: { c: [-0.66, 0.78], r: [0.40, 0.36] }, VD: { c: [-0.58, -0.32], r: [0.52, 0.86] },
+  AE: { c: [0.66, 0.80], r: [0.38, 0.34] }, VE: { c: [0.50, -0.36], r: [0.38, 0.92] },
+};
+const dentroE = (e, x, y) => ((x - e.c[0]) / e.r[0]) ** 2 + ((y - e.c[1]) / e.r[1]) ** 2 < 1;
+function uniao(A, V) { // contorno de átrio ∪ ventrículo (ligados pelo "pescoço" da válvula)
+  const pts = [], N = 200;
+  for (let i = 0; i <= N; i++) { const a = -Math.PI / 2 + (i / N) * 2 * Math.PI; const x = A.c[0] + A.r[0] * Math.cos(a), y = A.c[1] + A.r[1] * Math.sin(a); if (!dentroE(V, x, y)) pts.push(new THREE.Vector2(x, y)); }
+  for (let i = 0; i <= N; i++) { const a = Math.PI / 2 + (i / N) * 2 * Math.PI; const x = V.c[0] + V.r[0] * Math.cos(a), y = V.c[1] + V.r[1] * Math.sin(a); if (!dentroE(A, x, y)) pts.push(new THREE.Vector2(x, y)); }
+  return pts;
+}
+function pescoco(A, V) { // as duas pontas do pescoço (onde ficam as dobradiças da válvula)
+  const pts = []; const N = 720;
+  for (let i = 0; i < N; i++) { const a = (i / N) * 2 * Math.PI; const x = A.c[0] + A.r[0] * Math.cos(a), y = A.c[1] + A.r[1] * Math.sin(a); const dentro = dentroE(V, x, y); const a2 = ((i + 1) / N) * 2 * Math.PI; const x2 = A.c[0] + A.r[0] * Math.cos(a2), y2 = A.c[1] + A.r[1] * Math.sin(a2); if (dentro !== dentroE(V, x2, y2)) pts.push(new THREE.Vector2(x, y)); }
+  pts.sort((p, q) => p.x - q.x); return pts; // [esquerda, direita]
+}
+const contorno = []; for (let i = 0; i < 240; i++) { const a = (i / 240) * 2 * Math.PI; const p = forma(Math.cos(a), Math.sin(a), 0); contorno.push(new THREE.Vector2(p.x, p.y)); }
+const shape = new THREE.Shape(contorno);
+shape.holes.push(new THREE.Path(uniao(CAM.AD, CAM.VD)), new THREE.Path(uniao(CAM.AE, CAM.VE)));
+const placaG = new THREE.ExtrudeGeometry(shape, { depth: 0.05, bevelEnabled: false, curveSegments: 1 });
+placaG.translate(0, 0, -0.05);
+const PLACA0 = placaG.attributes.position.array.slice();
+const placaM = new THREE.MeshStandardMaterial({ map: corte, color: 0x9a6a6e, roughness: 0.62, metalness: 0, side: THREE.DoubleSide });
+// UV do corte: coordenada plana
+{ const uv = placaG.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, PLACA0[i * 3] * 0.32 + 0.5, PLACA0[i * 3 + 1] * 0.32 + 0.5); }
+{ // parede: borda escura no endocárdio e no epicárdio, desenhada na textura do corte (UV plano)
+  const cv = corte.image, g = cv.getContext('2d'), N = cv.width, X = (x) => (x * 0.32 + 0.5) * N, Y = (y) => (1 - (y * 0.32 + 0.5)) * N;
+  const traca = (pts, w, cor) => { g.strokeStyle = cor; g.lineWidth = w; g.lineJoin = 'round'; g.beginPath(); pts.forEach((p, i) => (i ? g.lineTo(X(p.x), Y(p.y)) : g.moveTo(X(p.x), Y(p.y)))); g.closePath(); g.stroke(); };
+  for (const pts of [uniao(CAM.AD, CAM.VD), uniao(CAM.AE, CAM.VE), contorno]) { traca(pts, 34, 'rgba(60,0,10,0.18)'); traca(pts, 18, 'rgba(60,0,10,0.3)'); traca(pts, 7, 'rgba(40,0,6,0.55)'); }
+  corte.needsUpdate = true;
+}
+const placa = new THREE.Mesh(placaG, placaM); tras.add(placa);
+
+// cavidades: tigelas (lado de dentro de elipsoides) cortadas no mesmo plano
+const cav = {};
+for (const [k, e] of Object.entries(CAM)) {
+  const g = new THREE.SphereGeometry(1, 64, 48); g.scale(e.r[0], e.r[1], 0.62 * Math.min(e.r[0], e.r[1]) + 0.25); g.translate(e.c[0], e.c[1], -0.02);
+  const m = new THREE.MeshStandardMaterial({ color: 0x5e1318, roughness: 0.5, side: THREE.BackSide, clippingPlanes: [clipTras], emissive: 0x000000 });
+  const me = new THREE.Mesh(g, m); me.userData.p0 = g.attributes.position.array.slice(); tras.add(me); cav[k] = me;
+}
+
+// ------------------------------------------------------------- vasos (cortados no mesmo plano: metade fica, metade sai com a porta)
+function tubo(pts, r, cor, raioFim = r) {
+  const c = new THREE.CatmullRomCurve3(pts.map((p) => v3(...p)));
+  const g = new THREE.TubeGeometry(c, 120, 1, 28, false);
+  const a = g.attributes.position, cen = c.getSpacedPoints(120);
+  for (let i = 0; i < a.count; i++) { const seg = Math.floor(i / 29), k = seg / 120, rr = lerp(r, raioFim, k); const o = cen[Math.min(120, seg)]; a.setXYZ(i, o.x + (a.getX(i) - o.x) * rr, o.y + (a.getY(i) - o.y) * rr, o.z + (a.getZ(i) - o.z) * rr); }
+  g.computeVertexNormals();
+  const gT = new THREE.Group(), gF = new THREE.Group();
+  gT.add(new THREE.Mesh(g, vaso(cor, clipTras))); gF.add(new THREE.Mesh(g, vaso(cor, clipFrente)));
+  tras.add(gT); frente.add(gF);
+  return { curva: c, gT, gF };
+}
+const VERM = 0xb3262b, AZUL = 0x2f5fb8;
+const aorta = tubo([[0.12, 0.85, -0.15], [0.16, 1.6, -0.1], [0.2, 2.15, -0.1], [0.6, 2.6, -0.4], [1.05, 2.4, -0.8], [1.15, 1.6, -1.05], [1.05, 0.6, -1.2]], 0.31, VERM, 0.26);
+const ramos = [[0.35, 2.5, -0.25], [0.62, 2.62, -0.45], [0.88, 2.55, -0.65]].map((p, i) => tubo([p, [p[0] - 0.05 + i * 0.05, p[1] + 0.75, p[2]]], 0.1 - i * 0.008, VERM));
+const pulmonar = tubo([[-0.12, 0.62, 0.12], [-0.05, 1.3, 0.16], [0.0, 1.78, 0.12]], 0.28, AZUL);
+const pulmE = tubo([[0.0, 1.78, 0.12], [0.6, 1.98, -0.05], [1.55, 2.05, -0.3]], 0.17, AZUL, 0.14);
+const pulmD = tubo([[0.0, 1.78, 0.12], [-0.6, 1.95, -0.25], [-1.6, 1.9, -0.45]], 0.17, AZUL, 0.14);
+const cavaS = tubo([[-0.86, 2.75, -0.25], [-0.84, 1.9, -0.25], [-0.78, 1.12, -0.22]], 0.23, AZUL);
+const cavaI = tubo([[-0.82, 0.42, -0.5], [-0.86, -0.4, -0.62], [-0.9, -1.2, -0.7]], 0.22, AZUL);
+const vpE1 = tubo([[0.85, 0.98, -0.5], [1.35, 1.06, -0.55], [1.85, 1.1, -0.6]], 0.12, VERM);
+const vpE2 = tubo([[0.85, 0.68, -0.55], [1.35, 0.6, -0.6], [1.85, 0.52, -0.66]], 0.12, VERM);
+const vpD1 = tubo([[0.4, 0.95, -0.75], [-0.6, 1.0, -0.95], [-1.75, 1.05, -1.0]], 0.11, VERM);
+
+// coronárias na superfície (artéria vermelha + veia azul no sulco)
+function naSuperficie(lista, r, cor) {
+  const pts = lista.map(([x, y]) => { const z = Math.sqrt(Math.max(0.0001, 1 - x * x - y * y)); return forma(x, y, z).multiplyScalar(1.012); });
+  const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 90, r, 10, false);
+  const m = new THREE.Mesh(g, new THREE.MeshPhysicalMaterial({ color: cor, roughness: 0.35, clearcoat: 0.6, clippingPlanes: [clipFrente] }));
+  frente.add(m); return m;
+}
+const ladY = (Y) => (Y + 0.28) / 1.72;
+const lad = []; for (let i = 0; i <= 14; i++) { const Y = lerp(0.36, -1.75, i / 14), y = ladY(Y), t = (y + 1) / 2, larg = 1.62 * (0.72 + 0.28 * Math.min(1, t * 1.6)); lad.push([(-0.05 + (0.3 - Y) * 0.2) / larg, y]); }
+naSuperficie(lad, 0.045, 0xc22a2f);
+naSuperficie(lad.map(([x, y]) => [x + 0.05, y]), 0.03, 0x34507e);
+const sulco = []; for (let i = 0; i <= 16; i++) { const a = lerp(-0.95, 0.95, i / 16), y = ladY(0.38), r = Math.sqrt(1 - y * y) * 0.999; sulco.push([Math.sin(a) * r, y]); }
+naSuperficie(sulco, 0.05, 0xc22a2f);
+for (const [i0, dx, dy] of [[4, 0.32, -0.18], [7, 0.3, -0.2], [9, -0.26, -0.16]]) { const [x, y] = lad[i0]; naSuperficie([[x, y], [x + dx * 0.5, y + dy * 0.5], [x + dx, y + dy]], 0.028, 0xc22a2f); }
+
+// ------------------------------------------------------------- válvulas
+const VALV = new THREE.MeshPhysicalMaterial({ color: 0xeedfd6, roughness: 0.45, clearcoat: 0.3, side: THREE.DoubleSide });
+function valvulaAV(A, V) {
+  const [pe, pd] = pescoco(A, V); const meio = (pd.x - pe.x) / 2;
+  const fazer = (p, lado) => { const piv = new THREE.Group(); piv.position.set(p.x, p.y, -0.13); const f = new THREE.Mesh(new THREE.BoxGeometry(meio * 1.08, 0.04, 0.24), VALV); f.position.x = lado * meio * 0.54; piv.add(f); tras.add(piv); piv.userData = { lado, p }; return piv; };
+  return { abas: [fazer(pe, 1), fazer(pd, -1)], centro: v3((pe.x + pd.x) / 2, (pe.y + pd.y) / 2, -0.1) };
+}
+const tricuspide = valvulaAV(CAM.AD, CAM.VD), mitral = valvulaAV(CAM.AE, CAM.VE);
+function valvulaSL(curva, r) { // 3 cúspides na raiz do vaso
+  const g = new THREE.Group(); const p = curva.getPointAt(0.02), tg = curva.getTangentAt(0.02);
+  g.position.copy(p); g.quaternion.setFromUnitVectors(v3(0, 1, 0), tg);
+  const cus = [0, 1, 2].map((i) => { const m = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 16), VALV.clone()); m.material.clippingPlanes = [clipTras]; m.scale.set(r * 0.42, r * 0.16, r * 0.42); m.userData.a = i * 2.094 + 0.5; g.add(m); return m; });
+  tras.add(g); return { g, cus, r };
+}
+const vAortica = valvulaSL(aorta.curva, 0.31), vPulmonar = valvulaSL(pulmonar.curva, 0.28);
+
+// ------------------------------------------------------------- sangue (azul = sem oxigênio, vermelho = com oxigênio — convenção)
+const curva = (pts) => new THREE.CatmullRomCurve3(pts.map((p) => v3(...p)));
+const cAzulA = curva([[-0.86, 2.7, -0.25], [-0.82, 1.6, -0.24], [-0.7, 0.86, -0.2], [-0.62, 0.48, -0.2], [-0.62, -0.3, -0.2], [-0.5, -0.95, -0.2], [-0.24, -0.5, -0.15], [-0.18, 0.2, -0.05], [-0.1, 0.8, 0.12], [-0.04, 1.4, 0.15], [0.0, 1.78, 0.12], [0.7, 2.0, -0.06], [1.55, 2.05, -0.3]]);
+const cAzulB = curva([[-0.86, 2.7, -0.25], [-0.82, 1.6, -0.24], [-0.7, 0.86, -0.2], [-0.62, 0.48, -0.2], [-0.62, -0.3, -0.2], [-0.5, -0.95, -0.2], [-0.24, -0.5, -0.15], [-0.18, 0.2, -0.05], [-0.1, 0.8, 0.12], [-0.04, 1.4, 0.15], [0.0, 1.78, 0.12], [-0.7, 1.95, -0.27], [-1.6, 1.9, -0.45]]);
+const cVerm = curva([[1.85, 1.1, -0.6], [1.2, 1.0, -0.5], [0.7, 0.82, -0.2], [0.6, 0.5, -0.2], [0.56, -0.3, -0.2], [0.5, -1.05, -0.2], [0.26, -0.45, -0.15], [0.2, 0.3, -0.15], [0.13, 0.95, -0.15], [0.17, 1.7, -0.1], [0.25, 2.2, -0.12], [0.6, 2.58, -0.4], [1.05, 2.38, -0.8], [1.15, 1.6, -1.05], [1.05, 0.7, -1.2]]);
+const sAzul = fluxo(scene, [cAzulA, cAzulB], { n: 110, cor: 0x3d7be0, r: 0.05, seed: 5, jit: 0.07, pai: coracao });
+const sVerm = fluxo(scene, [cVerm], { n: 110, cor: 0xe0303a, r: 0.05, seed: 9, jit: 0.07, pai: coracao });
+const avancoSangue = (t) => { const b = Math.floor(t * FREQ) + sm(0.17, 0.48, fase(t)); return 0.07 * b + 0.025 * t; };
+const defSangue = (P) => { if (P.y < 1.2 && Math.abs(P.x) < 1.3 && P.z < 0.05) deforma(P); };
+
+// ------------------------------------------------------------- sinal elétrico (nó sinoatrial → nó AV → feixe → ramos)
+const AMAR = 0xfacc15;
+const cSinal = curva([[-0.74, 1.1, 0.02], [-0.45, 0.75, 0.02], [-0.06, 0.48, 0.02], [0.03, 0.0, 0.02], [0.04, -0.7, 0.02], [0.05, -1.25, 0.02]]);
+const cRamoE = curva([[0.05, -1.25, 0.02], [0.5, -1.35, 0.02], [0.95, -0.7, 0.02], [1.05, 0.1, 0.02]]);
+const cRamoD = curva([[0.05, -1.25, 0.02], [-0.45, -1.3, 0.02], [-1.0, -0.6, 0.02], [-1.12, 0.1, 0.02]]);
+const fio = (c) => { const g = new THREE.TubeGeometry(c, 160, 0.035, 8, false); const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ color: AMAR, transparent: true, opacity: 0 })); tras.add(m); return m; };
+const fios = [fio(cSinal), fio(cRamoE), fio(cRamoD)];
+const fiosBase = [cSinal, cRamoE, cRamoD].map((c) => { const m = new THREE.Mesh(new THREE.TubeGeometry(c, 160, 0.02, 6, false), new THREE.MeshBasicMaterial({ color: 0xfff3c4, transparent: true, opacity: 0 })); tras.add(m); return m; });
+const noSA = new THREE.Mesh(new THREE.SphereGeometry(0.09, 20, 14), new THREE.MeshBasicMaterial({ color: AMAR, transparent: true, opacity: 0 })); noSA.position.set(-0.74, 1.1, 0.04); tras.add(noSA);
+const noAV = noSA.clone(); noAV.material = noSA.material.clone(); noAV.position.set(-0.06, 0.48, 0.04); noAV.scale.setScalar(0.75); tras.add(noAV);
 
 // ------------------------------------------------------------- relógio da história
-const CORTES = ['b0', 'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8'].map((b, i) => (i ? B[b].ini - 0.12 : 0));
-const cena = (t) => { let k = 0; CORTES.forEach((c, i) => { if (t >= c) k = i; }); return k; };
-const DESCE = [F.titulo.fim + 0.1, F.titulo.fim + 1.3];
-const SOBE = [palavra('volta', 'vinte') - 0.1, palavra('volta', 'graus') + 0.3];
-const incl = (t) => 23.4 * (1 - io(ramp(t, ...DESCE))) + 23.4 * io(ramp(t, ...SOBE));
-const modo = (t) => io(ramp(t, DESCE[0] + 0.1, DESCE[1] + 0.1)) * (1 - io(ramp(t, SOBE[0] + 0.1, SOBE[1])));
+const T = {
+  abre: [F.camaras.ini - 0.15, F.camaras.ini + 1.1],
+  fecha: [F.volta.ini + 0.1, F.volta.ini + 1.3],
+  explode: [B.b7.ini - 0.1, B.b7.ini + 1.3], junta: [F.volta.ini - 0.1, F.volta.ini + 1.1],
+};
+const loc = (x, y, z = 0) => () => coracao.localToWorld(v3(x, y, z));
+const alvoLocal = (x, y, z = 0) => { coracao.updateMatrixWorld(); return coracao.localToWorld(v3(x, y, z)); };
+const C0 = [-28, 7, 19.5, alvoLocal(0.2, 1.3)];
+const camAnda = cameraPorChaves(camera, [
+  [0, ...C0], [F.titulo.fim + 0.6, -25, 6, 19.3, alvoLocal(0.2, 1.2)],
+  [F.batidas.fim, -12, 5, 18.5, alvoLocal(0.2, 0.55)],
+  [F.camaras.ini + 1.3, 0, 1, 17.0, alvoLocal(0.05, 0.6)],
+  [F.camaras.fim, 0, 0, 16.6, alvoLocal(0.05, 0.6)],
+  [F.azul.fim, -5, 2, 15.6, alvoLocal(-0.35, 0.95)],
+  [F.vermelho.fim, 5, 2, 15.6, alvoLocal(0.4, 0.95)],
+  [palavra('valvulas', 'tum') , 0, 0, 12.2, alvoLocal(0.0, 0.5)],
+  [F.valvulas.fim, 0, 0, 12.0, alvoLocal(0.0, 0.48)],
+  [F.sinal.fim, 0, 0, 15.2, alvoLocal(0.0, 0.0)],
+  [F.pecas.fim, 22, 8, 20.5, alvoLocal(0.15, 0.95)],
+  [F.volta.ini + 1.3, -28, 7, 19.5, alvoLocal(0.2, 1.3)],
+  [FIM, ...C0],
+]);
 
-// dia do ano mostrado no aparelho: [tempo, dia, curva]
-const DIAS = [
-  [0, 172], [F.sombra.ini, 172], [F.doze.fim, 537, 'io'],
-  [palavra('poa', 'dezembro') - 0.2, 537], [palavra('poa', 'dezembro') + 0.7, 720, 'io'],
-  [palavra('ferraz', 'junho') - 0.2, 720], [palavra('ferraz', 'junho') + 0.8, 902, 'io'],
-  [palavra('ferraz', 'dezembro') - 0.2, 902], [palavra('ferraz', 'dezembro') + 0.8, 1085, 'io'],
-  [palavra('janeiro', 'janeiro') - 0.2, 1085], [palavra('janeiro', 'janeiro') + 0.6, 1098, 'io'],
-  [F.volta.ini, 1098], [F.volta.fim + 0.2, 1632, 'io'],
+// explodida: cada peça sai na sua direção
+const SAI = [
+  [aorta, v3(0.9, 1.15, 0)], [pulmonar, v3(-0.35, 1.3, 0.9)], [pulmE, v3(0.6, 1.4, 0.9)], [pulmD, v3(-1.1, 1.4, 0.9)],
+  [cavaS, v3(-1.3, 0.8, 0)], [cavaI, v3(-1.2, -0.9, 0)], [vpE1, v3(1.3, 0.3, 0)], [vpE2, v3(1.3, -0.1, 0)], [vpD1, v3(-0.4, 0.2, -0.9)],
+  ...ramos.map((r) => [r, v3(0.9, 1.6, 0)]),
 ];
-function dia(t) {
-  for (let i = 1; i < DIAS.length; i++) {
-    const [t0, d0] = DIAS[i - 1], [t1, d1, e] = DIAS[i];
-    if (t <= t1) { const k = ramp(t, t0, t1); return lerp(d0, d1, e === 'io' ? io(k) : e ? k : (t >= t1 ? 1 : 0)); }
-  }
-  return DIAS[DIAS.length - 1][1];
-}
-const MESES = ['JAN', 'FEV', 'MAR', 'ABR', 'MAI', 'JUN', 'JUL', 'AGO', 'SET', 'OUT', 'NOV', 'DEZ'];
-const DIAS_MES = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-function data(d) {
-  let n = ((Math.round(d) - 1) % 365 + 365) % 365, m = 0;
-  while (n >= DIAS_MES[m]) { n -= DIAS_MES[m]; m++; }
-  return `${String(n + 1).padStart(2, '0')} ${MESES[m]}`;
-}
-const declinacao = (d, tiltDeg) => tiltDeg * Math.sin((2 * Math.PI * (d - 80)) / 365);
-// direção do Sol para latitude φ, ângulo horário h (0 = meio-dia), declinação δ. Leste = +x, cima = +y, norte = -z.
-function sol(phi, h, dec) {
-  const p = phi * D2R, d = dec * D2R;
-  const e = -Math.cos(d) * Math.sin(h), n = Math.sin(d) * Math.cos(p) - Math.cos(d) * Math.cos(h) * Math.sin(p);
-  const u = Math.sin(d) * Math.sin(p) + Math.cos(d) * Math.cos(h) * Math.cos(p);
-  return v3(e, u, -n).normalize();
+
+// etiquetas (lado da tela, altura fixa em px, peça no fio)
+const vasoPonto = (v, s, dx = 0) => () => { const p = v.curva.getPointAt(s).add(v.gT.position); p.x += dx; return coracao.localToWorld(p); };
+const ETI = etiquetas([
+  { txt: 'Átrio<br>direito', lado: 'e', y: 700, alvo: loc(-0.7, 0.85, -0.3), de: palavra('camaras', 'átrios') - 0.1, ate: F.camaras.fim + 0.5 },
+  { txt: 'Átrio<br>esquerdo', lado: 'd', y: 640, alvo: loc(0.66, 0.85, -0.3), de: palavra('camaras', 'átrios') + 0.2, ate: F.camaras.fim + 0.5 },
+  { txt: 'Ventrículo<br>direito', lado: 'e', y: 1110, alvo: loc(-0.62, -0.4, -0.3), de: palavra('camaras', 'ventrículos') - 0.1, ate: F.camaras.fim + 0.5 },
+  { txt: 'Ventrículo<br>esquerdo', lado: 'd', y: 1060, alvo: loc(0.5, -0.5, -0.3), de: palavra('camaras', 'ventrículos') + 0.2, ate: F.camaras.fim + 0.5 },
+  { txt: 'Veia cava', sub: 'vem do corpo', lado: 'e', y: 560, alvo: vasoPonto(cavaS, 0.25), de: F.azul.ini + 0.2, ate: F.azul.fim + 0.3 },
+  { txt: 'Artéria<br>pulmonar', sub: 'vai aos pulmões', lado: 'e', y: 830, alvo: vasoPonto(pulmD, 0.75), de: palavra('azul', 'pulmões') - 0.6, ate: F.vermelho.ini + 0.9 },
+  { txt: 'Veias<br>pulmonares', sub: 'vêm dos pulmões', lado: 'd', y: 820, alvo: vasoPonto(vpE1, 0.8), de: F.vermelho.ini + 0.1, ate: F.vermelho.fim + 0.3 },
+  { txt: 'Aorta', sub: 'vai ao corpo', lado: 'd', y: 560, alvo: vasoPonto(aorta, 0.45), de: palavra('vermelho', 'aorta') - 0.5, ate: F.valvulas.ini + 1.0, q: true },
+  { txt: 'Tricúspide', lado: 'e', y: 760, alvo: () => coracao.localToWorld(tricuspide.centro.clone()), de: palavra('valvulas', 'válvulas') - 0.1, ate: F.valvulas.fim + 0.2 },
+  { txt: 'Mitral', lado: 'd', y: 760, alvo: () => coracao.localToWorld(mitral.centro.clone()), de: palavra('valvulas', 'válvulas') + 0.1, ate: F.valvulas.fim + 0.2 },
+  { txt: 'Nó sinoatrial', sub: 'o marca-passo', lado: 'e', y: 600, alvo: () => noSA.getWorldPosition(v3(0, 0, 0)), de: palavra('sinal', 'elétrico') - 0.1, ate: F.sinal.fim + 0.3, q: true },
+  { txt: 'Aorta', lado: 'd', y: 470, alvo: vasoPonto(aorta, 0.3), de: B.b7.ini + 0.9, ate: F.volta.ini + 0.5 },
+  { txt: 'Veia cava', lado: 'e', y: 690, alvo: vasoPonto(cavaS, 0.3), de: B.b7.ini + 1.1, ate: F.volta.ini + 0.5 },
+  { txt: 'Veias pulmonares', lado: 'd', y: 1150, alvo: vasoPonto(vpE1, 0.9), de: B.b7.ini + 1.2, ate: F.volta.ini + 0.5 },
+  { txt: '4 câmaras', sub: '4 válvulas', lado: 'e', y: 1150, alvo: loc(-0.5, -0.2, -0.2), de: B.b7.ini + 1.3, ate: F.volta.ini + 0.5, q: true },
+]);
+
+// monitor (ECG)
+const ecg = (p) => 0.18 * bump(p, 0.02, 0.12) + (p > 0.155 && p < 0.175 ? -0.25 * bump(p, 0.155, 0.175) : 0) + 1.0 * bump(p, 0.17, 0.205) - 0.35 * bump(p, 0.205, 0.235) + 0.3 * bump(p, 0.33, 0.47);
+const elECG = document.getElementById('mo-ecg'), elN = document.getElementById('mo-n');
+const elTum = document.getElementById('som-tum'), elTa = document.getElementById('som-ta');
+function monitor(t) {
+  document.getElementById('monitor').style.opacity = ramp(t, F.titulo.fim + 0.5, F.titulo.fim + 0.9) * (1 - ramp(t, F.volta.ini - 0.2, F.volta.ini + 0.2));
+  let s = '';
+  for (let i = 0; i < 70; i++) { const tau = t - 2 + (i / 69) * 2; s += `${(i / 69 * 200).toFixed(1)},${(42 - 30 * ecg(fase(tau))).toFixed(1)} `; }
+  elECG.setAttribute('points', s);
+  elN.textContent = Math.floor(t * FREQ + 0.83);
+  const jan = win(t, F.valvulas.ini, F.valvulas.fim + 0.3, 0.2, 0.2), p = fase(t);
+  const pulso = (a) => { const d = ((p - a) % 1 + 1) % 1; return d < 0.3 ? 1 - d / 0.3 : 0; };
+  elTum.style.opacity = jan * (0.35 + 0.65 * pulso(0.17)); elTa.style.opacity = jan * (0.35 + 0.65 * pulso(0.48));
+  elTum.style.transform = `scale(${1 + 0.15 * pulso(0.17)})`; elTa.style.transform = `scale(${1 + 0.15 * pulso(0.48)})`;
 }
 
-// ------------------------------------------------------------- luzes
-const hemi = new THREE.HemisphereLight(0xdfefff, 0x4a5a3a, 0.9); scene.add(hemi);
-const luz = new THREE.DirectionalLight(0xfff1d6, 2.6);
-luz.castShadow = true; luz.shadow.mapSize.set(2048, 2048);
-Object.assign(luz.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 1, far: 400 });
-luz.shadow.bias = -0.0006; scene.add(luz, luz.target);
-const discoSol = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshBasicMaterial({ color: COR.amarelo }));
-scene.add(discoSol);
-
-// ------------------------------------------------------------- peças
-const r = rng(7);
-function pessoa(cor = 0xc0563b) {
-  const g = new THREE.Group();
-  const pele = mat(0xc99a74, COR.eseFill2), roupa = mat(cor, COR.eseFill2), calca = mat(0x2c3e5a, COR.eseFill);
-  for (const x of [-0.17, 0.17]) { const p = solido(new THREE.CylinderGeometry(0.13, 0.12, 0.95, 8), calca); p.position.set(x, 0.48, 0); g.add(p); }
-  const tronco = solido(new THREE.CylinderGeometry(0.32, 0.27, 0.85, 10), roupa); tronco.position.y = 1.38; g.add(tronco);
-  for (const x of [-0.42, 0.42]) { const b = solido(new THREE.CylinderGeometry(0.09, 0.08, 0.78, 8), roupa); b.position.set(x, 1.32, 0); b.rotation.z = x > 0 ? 0.12 : -0.12; g.add(b); }
-  const cabeca = solido(new THREE.IcosahedronGeometry(0.25, 1), pele); cabeca.position.y = 2.05; g.add(cabeca);
-  return g;
-}
-function arvore(h = 3, s = 1.6) {
-  const g = new THREE.Group();
-  const tr = solido(new THREE.CylinderGeometry(0.18, 0.26, h, 7), mat(0x6b4a2e, COR.eseFill)); tr.position.y = h / 2; g.add(tr);
-  const copa = solido(new THREE.IcosahedronGeometry(s, 0), mat(0x4e8f3a, COR.eseFill2)); copa.position.y = h + s * 0.6; g.add(copa);
-  return g;
-}
-
-// CAMPO (cenas 0, 1, 8) — um gramado no Sul do Brasil (30°S)
-const campo = new THREE.Group(); scene.add(campo);
-const chao = solido(new THREE.CircleGeometry(160, 64), mat(0x6fa845, 0x223650), false, false);
-chao.rotation.x = -Math.PI / 2; campo.add(chao);
-const grade = new THREE.GridHelper(320, 80, COR.eseLinha, COR.eseLinha); grade.material.transparent = true; campo.add(grade);
-const gente = pessoa(); campo.add(gente);
-const gente2 = pessoa(0x3a6ea5); gente2.position.set(-2.6, 0, -3.5); gente2.scale.setScalar(0.92); campo.add(gente2);
-for (let i = 0; i < 26; i++) {
-  const a = Math.PI * (1.08 + r() * 0.84), d = 14 + r() * 60, t = arvore(2.4 + r() * 1.6, 1.3 + r() * 0.9);
-  t.position.set(Math.cos(a) * d, 0, Math.sin(a) * d - 6); campo.add(t);
-}
-const caminho = solido(new THREE.PlaneGeometry(2.2, 140), mat(0xd9c9a3, 0x1d2836), false, false);
-caminho.rotation.x = -Math.PI / 2; caminho.position.set(3.2, 0.02, -40); campo.add(caminho);
-// marcas da sombra de HOJE (com inclinação): meio-dia de junho e de dezembro em 30°S
-const marcas = new THREE.Group(); campo.add(marcas);
-function marca(len, txt) {
-  const linha = new THREE.Mesh(new THREE.PlaneGeometry(0.08, len), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0 }));
-  linha.rotation.x = -Math.PI / 2; linha.position.set(0, 0.03, len / 2); marcas.add(linha);
-  const fim = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 0.08), linha.material); fim.rotation.x = -Math.PI / 2; fim.position.set(0, 0.03, len); marcas.add(fim);
-  const l = rotulo(txt, { tam: 44, largura: 1.5 }); l.position.set(2.0, 0.3, len); marcas.add(l);
-  return { mat: linha.material, l };
-}
-const altura = 2.3; // altura da pessoa (sombra = altura / tan(elevação))
-const somb = (el) => altura / Math.tan(el * D2R);
-const mJun = marca(somb(90 - 30 - 23.4), 'JUN · HOJE'), mDez = marca(somb(90 - 30 + 23.4), 'DEZ · HOJE');
-const rotSemIncl = rotulo('SEM INCLINAÇÃO · O ANO TODO', { tam: 40, largura: 2.9, cor: '#FACC15' });
-campo.add(rotSemIncl);
-
-// PORTO ALEGRE (cena 2) — orla do Guaíba ao fim da tarde, chaminé da Usina do Gasômetro
-const cidade = new THREE.Group(); scene.add(cidade);
-const agua = solido(new THREE.PlaneGeometry(600, 300), mat(0x3f6f8f, 0x101823, { roughness: 0.35 }), false, false);
-agua.rotation.x = -Math.PI / 2; agua.position.set(0, 0, -150); cidade.add(agua);
-const cais = solido(new THREE.BoxGeometry(600, 1, 400), mat(0x8c8a80, COR.eseFill), false); cais.position.set(0, -0.5, 200); cidade.add(cais);
-for (let i = 0; i < 70; i++) {
-  const w = 3 + r() * 5, h = 6 + r() * (i % 9 === 0 ? 40 : 18), d = 3 + r() * 5;
-  const p = solido(new THREE.BoxGeometry(w, h, d), mat([0xd8cfc0, 0xb9a98f, 0xe6e0d4, 0x9aa4ad][i % 4], i % 2 ? COR.eseFill : COR.eseFill2));
-  p.position.set(-110 + (i % 35) * 6.4 + r() * 2, h / 2, 10 + Math.floor(i / 35) * 9 + r() * 4); cidade.add(p);
-}
-const usina = solido(new THREE.BoxGeometry(16, 9, 10), mat(0xa0522d, COR.eseFill2)); usina.position.set(18, 4.5, 2); cidade.add(usina);
-const chamine = solido(new THREE.CylinderGeometry(1.1, 1.8, 42, 12), mat(0xa0522d, COR.eseFill2)); chamine.position.set(26, 21, 2); cidade.add(chamine);
-const rotPoa = rotulo('PORTO ALEGRE · 30°S', { tam: 44, largura: 34 }); rotPoa.position.set(-40, 92, 30); cidade.add(rotPoa);
-
-// GLOBO (cenas 3 e 5) — continentes reais (Natural Earth)
-const R = 3;
-const giro = new THREE.Group(), globoG = new THREE.Group(); scene.add(giro); giro.add(globoG);
-const terra = globo(R); globoG.add(terra);
-const anelMat = (cor, op = 0.9) => new THREE.MeshBasicMaterial({ color: cor, transparent: true, opacity: op });
-function paralelo(lat, cor, op) {
-  const m = new THREE.Mesh(new THREE.TorusGeometry(R * 1.004, 0.012, 6, 160), anelMat(cor, op));
-  m.rotation.x = Math.PI / 2; m.userData.lat = lat; globoG.add(m); return m;
-}
-const equador = paralelo(0, 0xffffff, 0.9);
-const tropN = paralelo(23.4, COR.amarelo, 0.9), tropS = paralelo(-23.4, COR.amarelo, 0.9);
-const polN = paralelo(66.6, 0x9cc3e6, 0.8), polS = paralelo(-66.6, 0x9cc3e6, 0.8);
-function poeLat(m, lat) { m.position.y = R * Math.sin(lat * D2R); const s = Math.max(1e-3, Math.cos(lat * D2R)); m.scale.set(s, s, 1); }
-const pinos = {};
-for (const [id, lat, lon, txt] of [['poa', -30.03, -51.23, 'PORTO ALEGRE'], ['manaus', -3.12, -60.02, 'MANAUS · ≈ 12 h O ANO TODO'], ['ferraz', -62.08, -58.4, 'EST. FERRAZ']]) {
-  const p = new THREE.Mesh(new THREE.SphereGeometry(0.055, 16, 8), new THREE.MeshBasicMaterial({ color: id === 'manaus' ? COR.amarelo : 0xffffff }));
-  p.position.copy(noGlobo(lat, lon, R * 1.01)); globoG.add(p);
-  const l = rotulo(txt, { tam: 40, largura: 1.9 }); l.position.copy(noGlobo(lat, lon, R * 1.01)).add(v3(1.1, 0.16, 0.3)); globoG.add(l);
-  pinos[id] = { p, l };
-}
-const rotEq = rotulo('EQUADOR', { tam: 36, largura: 1.3 }); rotEq.position.copy(noGlobo(2.5, -38, R * 1.02)); globoG.add(rotEq);
-const rotTrop = rotulo('TRÓPICOS → EQUADOR', { tam: 40, largura: 3.2, cor: '#FACC15' }); scene.add(rotTrop);
-// estrelas (fixas, sem brilho)
-const estrelas = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.Float32BufferAttribute(
-  Array.from({ length: 2400 }, () => { const a = r() * Math.PI * 2, b = Math.acos(2 * r() - 1); return [Math.sin(b) * Math.cos(a) * 1800, Math.cos(b) * 1800, Math.sin(b) * Math.sin(a) * 1800]; }).flat(), 3)),
-  new THREE.PointsMaterial({ color: 0xffffff, size: 2.2, sizeAttenuation: false, transparent: true, opacity: 0.75 }));
-scene.add(estrelas);
-
-// ANTÁRTIDA (cena 4) — Estação Comandante Ferraz, baía do Almirantado
-const anta = new THREE.Group(); scene.add(anta);
-const gelo = solido(new THREE.PlaneGeometry(500, 500, 40, 40), mat(0xeef3f7, 0x2b4462), false, false);
-gelo.rotation.x = -Math.PI / 2; { const p = gelo.geometry.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i); if (y > 30) p.setZ(i, (y - 30) * 0.25 * (0.6 + r() * 0.8)); } gelo.geometry.computeVertexNormals(); }
-anta.add(gelo);
-const mar = solido(new THREE.PlaneGeometry(500, 200), mat(0x2b4a63, 0x1b2c44, { roughness: 0.3 }), false, false);
-mar.rotation.x = -Math.PI / 2; mar.position.set(0, 0.05, 140); anta.add(mar);
-for (let i = 0; i < 9; i++) { const m = solido(new THREE.ConeGeometry(18 + r() * 22, 24 + r() * 30, 6), mat(0xdfe7ee, COR.eseFill2)); m.position.set(-160 + i * 40 + r() * 10, 10, -120 - r() * 60); anta.add(m); }
-for (let i = 0; i < 6; i++) {
-  const mod = solido(new THREE.BoxGeometry(6, 3.2, 4), mat(i % 2 ? 0xd9622b : 0x2f6f4f, COR.eseFill2));
-  mod.position.set(-14 + i * 6.3, 2.6, 8 + (i % 2) * 0.6); anta.add(mod);
-  const pe = solido(new THREE.BoxGeometry(5.6, 1, 0.4), mat(0x555a60, COR.eseFill)); pe.position.set(-14 + i * 6.3, 0.5, 8); anta.add(pe);
-}
-const rotFerraz = rotulo('ESTAÇÃO FERRAZ · 62°S', { tam: 44, largura: 15 }); rotFerraz.position.set(-6, 36, 8); anta.add(rotFerraz);
-
-// CÚPULA DO CÉU (cenas 2 e 4) — o caminho do Sol em junho e em dezembro, que vira um só sem inclinação
-function cupula(lat, raio, rotJ, rotD, rotIgual) {
-  const g = new THREE.Group();
-  const linha = (op) => new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: op, depthWrite: false });
-  const horiz = new THREE.Mesh(new THREE.TorusGeometry(raio, raio * 0.006, 6, 160), linha(0.7)); horiz.rotation.x = Math.PI / 2; g.add(horiz);
-  for (const a of [0, Math.PI / 2]) { const m = new THREE.Mesh(new THREE.TorusGeometry(raio, raio * 0.003, 4, 120, Math.PI), linha(0.28)); m.rotation.y = a; g.add(m); }
-  const casca = new THREE.Mesh(new THREE.SphereGeometry(raio, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2),
-    new THREE.MeshBasicMaterial({ color: 0x9cc3e6, transparent: true, opacity: 0.07, side: THREE.DoubleSide, depthWrite: false }));
-  g.add(casca);
-  const matJ = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.95 });
-  const matD = new THREE.MeshBasicMaterial({ color: COR.amarelo, transparent: true, opacity: 0.95 });
-  const arcos = [new THREE.Mesh(new THREE.BufferGeometry(), matJ), new THREE.Mesh(new THREE.BufferGeometry(), matD)];
-  arcos.forEach((a) => g.add(a));
-  const bola = new THREE.Mesh(new THREE.SphereGeometry(raio * 0.05, 24, 12), new THREE.MeshBasicMaterial({ color: COR.amarelo })); g.add(bola);
-  const lJ = rotulo(rotJ, { tam: 44, largura: raio * 0.62 }), lD = rotulo(rotD, { tam: 44, largura: raio * 0.62, cor: '#FACC15' });
-  const lI = rotulo(rotIgual, { tam: 44, largura: raio * 0.9, cor: '#FACC15' });
-  g.add(lJ, lD, lI);
-  const pontos = (dec) => {
-    const c = clamp(-Math.tan(lat * D2R) * Math.tan(dec * D2R), -1, 1), H0 = Math.acos(c);
-    const n = 64, out = [];
-    for (let k = 0; k <= n; k++) out.push(sol(lat, lerp(-H0, H0, k / n), dec).multiplyScalar(raio));
-    return out;
-  };
-  const topo = (pts) => pts.reduce((a, b) => (b.y > a.y ? b : a));
-  // junta: 0 = arcos de hoje (±23,4°), 1 = os dois viraram o do equinócio (0°)
-  g.userData.set = (junta, sol01, qual, op) => {
-    const decs = [23.4 * (1 - junta), -23.4 * (1 - junta)]; // junho (δ +), dezembro (δ −) — hemisfério sul
-    const pts = decs.map(pontos);
-    arcos.forEach((a, k) => { a.geometry.dispose(); a.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts[k]), 80, raio * 0.012, 6); });
-    matJ.opacity = 0.95 * op; matD.opacity = 0.95 * op;
-    const tJ = topo(pts[0]), tD = topo(pts[1]);
-    lJ.position.copy(tJ).add(v3(0, raio * 0.1, 0)); lD.position.copy(tD).add(v3(0, raio * 0.12, 0));
-    lI.position.copy(tD).add(v3(0, raio * 0.14, 0));
-    const pa = pts[qual]; const idx = Math.min(pa.length - 1, Math.floor(sol01 * (pa.length - 1)));
-    bola.position.copy(pa[idx]); bola.visible = op > 0.05;
-    return { lJ, lD, lI };
-  };
-  [horiz, casca].forEach((m) => (m.userData.op = m.material.opacity));
-  g.userData.fade = (op) => { horiz.material.opacity = 0.7 * op; casca.material.opacity = 0.07 * op; };
-  return g;
-}
-const cupPoa = cupula(-30, 70, 'JUN · ≈ 10 h', 'DEZ · ≈ 14 h', 'SEM INCLINAÇÃO · ≈ 12 h'); cupPoa.position.set(0, 0, 20); cidade.add(cupPoa);
-const cupFerraz = cupula(-62, 26, 'JUN · ≈ 5 h', 'DEZ · ≈ 20 h', 'SEM INCLINAÇÃO · ≈ 12 h'); cupFerraz.position.set(4, 0, 8); anta.add(cupFerraz);
-// marca o ritmo da cena da cúpula: hoje (junho → dezembro) e depois sem inclinação
-function animaCupula(c, t, fJun, fDez, fJunta) {
-  const tJ = palavra(fJun[0], fJun[1]), tD = palavra(fDez[0], fDez[1]), tI = F[fJunta].ini;
-  const junta = io(ramp(t, tI + 0.2, tI + 1.6));
-  const qual = t < tD - 0.2 ? 0 : 1;
-  const ini = qual === 0 ? tJ - 0.3 : tD - 0.3, fim = qual === 0 ? tD - 0.3 : tI + 2.5;
-  const r = c.userData.set(junta, ramp(t, ini, fim), junta > 0.5 ? 1 : qual, 1);
-  r.lJ.material.opacity = win(t, tJ - 0.2, tI + 0.4) ; r.lD.material.opacity = win(t, tD - 0.2, tI + 0.4);
-  r.lI.material.opacity = out3(ramp(t, tI + 1.2, tI + 1.7));
-}
-
-// POLO (cena 6)
-const polo = new THREE.Group(); scene.add(polo);
-const plano = solido(new THREE.CircleGeometry(400, 64), mat(0xeef3f7, 0x2b4462), false, false); plano.rotation.x = -Math.PI / 2; polo.add(plano);
-const gradeP = new THREE.PolarGridHelper(60, 16, 6, 64, COR.eseLinha, COR.eseLinha); gradeP.material.transparent = true; gradeP.material.opacity = 0.35; polo.add(gradeP);
-const estaca = solido(new THREE.CylinderGeometry(0.08, 0.08, 3, 8), mat(0xbbbbbb, COR.eseFill2)); estaca.position.y = 1.5; polo.add(estaca);
-const bola = solido(new THREE.SphereGeometry(0.35, 16, 8), mat(0xc8c8c8, COR.eseFill2)); bola.position.y = 3.2; polo.add(bola);
-for (let i = 0; i < 40; i++) { const b = solido(new THREE.DodecahedronGeometry(0.6 + r() * 1.6, 0), mat(0xe2eaf1, COR.eseFill2)); const a = r() * 6.28, d = 8 + r() * 50; b.position.set(Math.cos(a) * d, 0.2, Math.sin(a) * d); b.scale.y = 0.4; polo.add(b); }
-const trilhaSol = new THREE.Mesh(new THREE.TorusGeometry(180, 0.35, 6, 200), anelMat(COR.amarelo, 0.7)); trilhaSol.rotation.x = Math.PI / 2; trilhaSol.position.y = 2; polo.add(trilhaSol);
-const rotPolo = rotulo('O SOL RODA NO HORIZONTE', { tam: 44, largura: 6.4, cor: '#FACC15' }); polo.add(rotPolo);
-
-// JÚPITER (cena 7) — sozinho, sem comparação de tamanho falsa
-const jup = new THREE.Group(); scene.add(jup);
-const faixas = (() => {
-  const c = document.createElement('canvas'); c.width = 1024; c.height = 512; const g = c.getContext('2d');
-  const cores = ['#d9c3a0', '#b98a5e', '#efe3cc', '#a8744c', '#e8d6b6', '#c49a6c', '#f2e8d5', '#9c6a45', '#e0c9a6', '#c7a27a'];
-  for (let y = 0; y < 512; y += 4) { const k = Math.floor((Math.sin(y * 0.045) * 0.5 + 0.5) * 9.99 + (y % 37 === 0 ? 1 : 0)) % 10; g.fillStyle = cores[k]; g.fillRect(0, y, 1024, 4); }
-  g.fillStyle = '#b5523b'; g.beginPath(); g.ellipse(700, 340, 60, 28, 0, 0, Math.PI * 2); g.fill();
-  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
-})();
-const jupiter = new THREE.Mesh(new THREE.SphereGeometry(3, 96, 48), new THREE.MeshStandardMaterial({ map: faixas, roughness: 0.95 })); jup.add(jupiter);
-const eixoJ = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 9, 8), anelMat(COR.amarelo, 1)); jup.add(eixoJ);
-const vertJ = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 9, 6), anelMat(0xffffff, 0.5)); jup.add(vertJ);
-const rotJ = rotulo('JÚPITER · 3°', { tam: 48, largura: 3.4, cor: '#FACC15' }); rotJ.position.set(0, 5.6, 0); jup.add(rotJ);
-const rotJT = rotulo('TERRA HOJE · 23,4°', { tam: 40, largura: 3.0 }); rotJT.position.set(0, 4.85, 0); jup.add(rotJT);
-
-const GRUPOS = [campo, cidade, giro, anta, polo, jup];
-const so = (...gs) => GRUPOS.forEach((g) => (g.visible = gs.includes(g)));
-
-// ------------------------------------------------------------- aparelho (DOM)
-const apNum = document.getElementById('ap-num'), apEixo = document.getElementById('ap-eixo');
-const apDia = document.getElementById('ap-dia'), apData = document.getElementById('ap-data');
-function aparelho(t) {
-  const i = incl(t), d = dia(t);
-  apNum.textContent = `${i.toFixed(1).replace('.', ',')}°`;
-  apEixo.setAttribute('transform', `rotate(${i.toFixed(2)} 50 50)`);
-  apDia.textContent = `DIA ${((Math.round(d) - 1) % 365) + 1}`;
-  apData.textContent = data(d);
-}
-
-// ------------------------------------------------------------- câmera
-const cam = (p, alvo, fov = 38) => { camera.position.copy(p); camera.fov = fov; camera.updateProjectionMatrix(); camera.lookAt(alvo); };
-
-// ------------------------------------------------------------- quadro no tempo t
+// ------------------------------------------------------------- um quadro
+const tmp = new THREE.Vector3();
 function renderAt(t) {
-  t = clamp(t, 0, FIM);
-  const k = cena(t), m = modo(t), i = incl(t), d = dia(t);
-  aparencia(m); ceuDome.set(m); terra.userData.set(m);
-  grade.material.opacity = 0.28 * m; scene.fog = null;
-  estrelas.visible = false; ceuDome.mesh.visible = true;
-  hemi.intensity = lerp(0.95, 0.85, m); luz.intensity = lerp(2.6, 2.1, m); luz.color.set(0xfff1d6);
-  discoSol.visible = true;
+  VV = vent(t); AA = atrio(t);
+  // pulsar a casca, a placa e as cavidades
+  const pa = casca.attributes.position.array;
+  for (let i = 0; i < pa.length; i += 3) { tmp.set(FORMA0[i], FORMA0[i + 1], FORMA0[i + 2]); deforma(tmp); pa[i] = tmp.x; pa[i + 1] = tmp.y; pa[i + 2] = tmp.z; }
+  casca.attributes.position.needsUpdate = true; casca.computeVertexNormals();
+  const pp = placaG.attributes.position.array;
+  for (let i = 0; i < pp.length; i += 3) { tmp.set(PLACA0[i], PLACA0[i + 1], 0); deforma(tmp); pp[i] = tmp.x; pp[i + 1] = tmp.y; }
+  placaG.attributes.position.needsUpdate = true;
+  for (const me of Object.values(cav)) { const a = me.geometry.attributes.position.array, p0 = me.userData.p0; for (let i = 0; i < a.length; i += 3) { tmp.set(p0[i], p0[i + 1], p0[i + 2]); deforma(tmp); a[i] = tmp.x; a[i + 1] = tmp.y; a[i + 2] = tmp.z; } me.geometry.attributes.position.needsUpdate = true; }
+  aurD.scale.set(0.42 * (1 - 0.12 * AA), 0.24, 0.26 * (1 - 0.12 * AA)); aurE.scale.set(0.36 * (1 - 0.12 * AA), 0.2, 0.22 * (1 - 0.12 * AA));
 
-  // sol do campo: 30°S; ao meio-dia, com a declinação do dia
-  const dirCampo = (h) => sol(-30, h, declinacao(d, i));
+  // a porta abre e fecha
+  const abre = io(ramp(t, ...T.abre)) * (1 - io(ramp(t, ...T.fecha)));
+  const ex0 = io(ramp(t, ...T.explode)) * (1 - io(ramp(t, ...T.junta)));
+  dobra.rotation.y = -abre * 1.95;
+  frente.visible = abre < 0.995;
+  const placaOn = abre > 0.001; placa.visible = placaOn; for (const me of Object.values(cav)) me.visible = placaOn;
 
-  if (k === 0 || k === 1 || k === 8) {
-    so(campo);
-    const h = k === 1 ? 0 : -0.35; // cena 1 = meio-dia; capa = começo da tarde
-    const s = dirCampo(h);
-    luz.position.copy(s.clone().multiplyScalar(120)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(900)); discoSol.scale.setScalar(26);
-    gente.rotation.y = 0.35; gente2.visible = k !== 1;
-    const vel = k === 1 ? ramp(t, CORTES[1], CORTES[2]) : k === 8 ? ramp(t, CORTES[8], FIM) : ramp(t, 0, CORTES[1]);
-    if (k === 1) cam(v3(lerp(10.5, 9.6, io(vel)), lerp(9.5, 8.6, vel), lerp(2.4, 2.0, io(vel))), v3(0.4, -1.3, 1.7), 40);
-    else {
-      // capa e volta usam a MESMA câmera no começo e no fim (o reel volta ao começo)
-      const z = k === 0 ? out3(vel) * 0.06 : 0.06 * (1 - io(ramp(t, SOBE[1], FIM - 0.3)));
-      cam(v3(lerp(5.0, 4.6, z / 0.06), lerp(2.6, 2.5, z / 0.06), lerp(10.5, 9.6, z / 0.06)), v3(-0.6, 2.2, -2), 40);
-    }
-    const marc = k === 1 ? win(t, F.sombra.ini + 0.4, CORTES[2], 0.5, 0.3) : 0;
-    mJun.mat.opacity = marc; mJun.l.material.opacity = marc; mDez.l.material.opacity = marc;
-    rotSemIncl.material.opacity = k === 1 ? win(t, palavra('sombra', 'nunca') - 0.1, F.doze.ini, 0.4, 0.3) : 0;
-    rotSemIncl.position.set(-1.2, 0.3, somb(60) + 0.55);
-  } else if (k === 2) {
-    so(cidade);
-    const fase = ramp(t, CORTES[2], CORTES[3]);
-    const s = sol(-30, lerp(1.05, 1.25, fase), declinacao(d, i)); // fim de tarde
-    luz.position.copy(s.clone().multiplyScalar(300)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(1500)); discoSol.scale.setScalar(40);
-    cam(v3(lerp(150, 125, io(fase)), lerp(150, 135, fase), lerp(345, 315, io(fase))), v3(0, 22, 0), 42);
-    rotPoa.material.opacity = win(t, CORTES[2] + 0.2, F.poa.ini + 1.2);
-    animaCupula(cupPoa, t, ['poa', 'junho'], ['poa', 'dezembro'], 'poa2');
-    discoSol.visible = false; hemi.intensity = 1.1;
-  } else if (k === 3 || k === 5) {
-    so(giro); estrelas.visible = true; ceuDome.mesh.visible = false; scene.background = new THREE.Color(0x05070c);
-    hemi.intensity = 1.1; luz.intensity = 2.4;
-    const fase = ramp(t, CORTES[k], CORTES[k + 1]);
-    const sDir = v3(-1, 0.0, 0.55).normalize(); // a luz vem do Sol, à esquerda
-    luz.position.copy(sDir.clone().multiplyScalar(50)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(sDir.clone().multiplyScalar(420)); discoSol.scale.setScalar(k === 5 ? 9 : 0.001);
-    // gira a América do Sul para a frente da câmera
-    globoG.rotation.y = (lerp(48, 62, fase) + (k === 5 ? 20 : 0)) * D2R;
-    giro.rotation.x = (k === 3 ? lerp(-12, -22, io(fase)) : -8) * D2R;
-    // eixo da Terra: inclinado pela variável incl (zero aqui)
-    giro.rotation.z = -i * D2R;
-    // trópicos e círculos polares: fecham no equador e nos polos (sem inclinação)
-    const fecha = k === 5 ? io(ramp(t, palavra('planeta', 'verão') - 0.3, palavra('planeta', 'inverno') + 0.6)) : 0;
-    const lt = 23.4 * (1 - fecha), lp = 66.6 + 23.4 * fecha;
-    poeLat(equador, 0); poeLat(tropN, lt); poeLat(tropS, -lt); poeLat(polN, lp); poeLat(polS, -lp);
-    for (const m2 of [tropN, tropS, polN, polS]) m2.visible = k === 5;
-    rotTrop.material.opacity = k === 5 ? win(t, palavra('planeta', 'verão'), F.janeiro.ini, 0.4, 0.3) : 0;
-    rotTrop.position.set(0, R * 1.02 * Math.sin(lt * D2R) + 0.45, R * 0.9);
-    rotEq.material.opacity = k === 3 ? win(t, palavra('manaus', 'equador') - 0.2, CORTES[4]) : 0;
-    for (const [id, pn] of Object.entries(pinos)) {
-      const on = k === 3 ? (id === 'manaus' ? 1 : 0.55) * win(t, CORTES[3] + 0.3, CORTES[4]) : 0;
-      pn.p.visible = on > 0.01; pn.l.material.opacity = on;
-    }
-    // janeiro: o lado iluminado ganha um pouco mais de luz (+7%), sem pintar o globo
-    const pulso = k === 5 ? Math.sin(clamp((t - palavra('janeiro', 'janeiro')) / 1.6) * Math.PI) : 0;
-    luz.intensity = 2.4 * (1 + 0.25 * pulso);
-    const dist = k === 3 ? lerp(19.5, 16.5, io(fase)) : lerp(22, 19.5, io(fase));
-    cam(v3(k === 3 ? 0.3 : -0.8, k === 3 ? -1.4 : -1.6, dist), v3(k === 3 ? 0.3 : -0.2, k === 3 ? -1.4 : -2.4, 0), 36);
-  } else if (k === 4) {
-    so(anta); hemi.intensity = 1.25;
-    const fase = ramp(t, CORTES[4], CORTES[5]);
-    const s = sol(-62, lerp(-1.0, -0.8, fase), -23.4 * (1 - m)); // junho: Sol baixo
-    luz.position.copy(s.clone().multiplyScalar(300)); luz.target.position.set(0, 0, 0);
-    discoSol.position.copy(s.clone().multiplyScalar(1500)); discoSol.scale.setScalar(36);
-    cam(v3(lerp(58, 50, io(fase)), lerp(60, 54, fase), lerp(128, 116, io(fase))), v3(4, 6, 0), 42);
-    rotFerraz.material.opacity = win(t, CORTES[4] + 0.2, F.ferraz.ini + 1.6);
-    animaCupula(cupFerraz, t, ['ferraz', 'junho'], ['ferraz', 'dezembro'], 'ferraz2');
-    discoSol.visible = false;
-  } else if (k === 6) {
-    so(polo);
-    const fase = ramp(t, CORTES[6], CORTES[7]);
-    const ca = lerp(0.6, 1.3, io(fase));
-    const az = -ca + lerp(-0.32, 0.32, fase); // o Sol desliza rente ao horizonte, na frente da câmera
-    const s = v3(Math.sin(az), 0.012, -Math.cos(az)).normalize();
-    luz.position.copy(s.clone().multiplyScalar(300).add(v3(0, 6, 0))); luz.target.position.set(0, 0, 0);
-    luz.intensity = 1.6; hemi.intensity = 0.6;
-    discoSol.position.copy(s.clone().multiplyScalar(170)).setY(5); discoSol.scale.setScalar(7);
-    cam(v3(Math.sin(ca) * 22, lerp(6, 4.5, fase), Math.cos(ca) * 22), v3(0, 3.2, 0), 44);
-    rotPolo.material.opacity = win(t, palavra('polos', 'rolando') - 0.5, CORTES[7]);
-    rotPolo.position.copy(s.clone().multiplyScalar(60)).setY(9);
-  } else if (k === 7) {
-    so(jup); estrelas.visible = true; ceuDome.mesh.visible = false; scene.background = new THREE.Color(0x05070c);
-    const fase = ramp(t, CORTES[7], CORTES[8]);
-    hemi.intensity = 0.3; luz.intensity = 2.8;
-    const sDir = v3(-1, 0.1, 0.6).normalize(); luz.position.copy(sDir.clone().multiplyScalar(60)); luz.target.position.set(0, 0, 0);
-    discoSol.visible = false;
-    jupiter.rotation.y = t * 0.35; jup.rotation.z = -3.1 * D2R; vertJ.rotation.z = 3.1 * D2R;
-    eixoJ.material.opacity = out3(ramp(t, palavra('jupiter', 'inclinado') - 0.2, palavra('jupiter', 'inclinado') + 0.4));
-    vertJ.material.opacity = 0.5 * eixoJ.material.opacity;
-    rotJ.material.opacity = win(t, palavra('jupiter', 'três') - 0.1, CORTES[8]);
-    rotJT.material.opacity = 0.85 * win(t, palavra('jupiter', 'três') + 0.4, CORTES[8]);
-    cam(v3(0, -0.4, lerp(25, 22.5, io(fase))), v3(0, 0.6, 0), 38);
-  }
-  if (!estrelas.visible) scene.background = null;
+  // explodida
+  const ex = io(ramp(t, ...T.explode)) * (1 - io(ramp(t, ...T.junta)));
+  for (const [v, d] of SAI) { v.gT.position.copy(d).multiplyScalar(0.7 * ex); v.gF.position.copy(d).multiplyScalar(0.7 * ex); }
+  for (const s of [vAortica]) s.g.position.copy(aorta.curva.getPointAt(0.02)).addScaledVector(SAI[0][1], 0.7 * ex);
+  vPulmonar.g.position.copy(pulmonar.curva.getPointAt(0.02)).addScaledVector(SAI[1][1], 0.7 * ex);
+  placa.position.z = 0; tras.position.z = -0.0;
 
-  aparelho(t);
+  // planos de corte no referencial de cada metade
+  coracao.updateMatrixWorld(true);
+  clipTras.copy(PL_TRAS).applyMatrix4(coracao.matrixWorld);
+  clipFrente.copy(PL_FRENTE).applyMatrix4(frente.matrixWorld);
+  // fora do corte, nada é cortado: o plano de trás vai para longe
+
+  // válvulas: abrem e fecham no tempo do batimento (F5, F6)
+  const av = avAberta(t), sl = slAberta(t);
+  for (const v of [tricuspide, mitral]) for (const a of v.abas) { tmp.set(a.userData.p.x, a.userData.p.y, 0); deforma(tmp); a.position.set(tmp.x, tmp.y, -0.13); a.rotation.z = a.userData.lado * -av * 1.15; }
+  for (const v of [vAortica, vPulmonar]) for (const c of v.cus) { const rr = v.r * lerp(0.32, 0.72, sl); c.position.set(Math.cos(c.userData.a) * rr, 0.05, Math.sin(c.userData.a) * rr); c.rotation.z = 0; c.rotation.x = 0; }
+
+  // cor das cavidades: o lado que a fala nomeia ganha luz própria
+  const kAz = win(t, F.azul.ini - 0.1, F.vermelho.ini + 0.3, 0.5, 0.4), kVm = win(t, F.vermelho.ini - 0.1, F.valvulas.ini + 0.2, 0.5, 0.4);
+  cav.AD.material.emissive.setRGB(0.05 * kAz, 0.12 * kAz, 0.38 * kAz); cav.VD.material.emissive.copy(cav.AD.material.emissive);
+  cav.AE.material.emissive.setRGB(0.4 * kVm, 0.04 * kVm, 0.06 * kVm); cav.VE.material.emissive.copy(cav.AE.material.emissive);
+
+  // sangue
+  const fluxoOn = placaOn ? win(t, F.azul.ini - 0.3, F.pecas.ini, 0.5, 0.5) : 0;
+  sAzul(avancoSangue(t), fluxoOn * (t < F.vermelho.ini ? 1 : 0.55), defSangue);
+  sVerm(avancoSangue(t) + 0.31, fluxoOn * (t < F.vermelho.ini - 0.2 ? 0.25 : 1), defSangue);
+
+  // sinal elétrico: a cada batida corre do nó sinoatrial até a ponta
+  const kS = win(t, F.sinal.ini - 0.2, F.pecas.ini + 0.2, 0.4, 0.4), p = fase(t);
+  const prog = [ramp(p, 0.0, 0.2), ramp(p, 0.17, 0.32), ramp(p, 0.17, 0.32)];
+  fios.forEach((m, i) => { m.material.opacity = kS * (1 - ramp(p, 0.4, 0.6)); m.geometry.setDrawRange(0, Math.floor(prog[i] * m.geometry.index.count / 6) * 6); });
+  fiosBase.forEach((m) => { m.material.opacity = 0.35 * kS; });
+  noSA.material.opacity = kS; noSA.scale.setScalar(1 + 0.6 * bump(p, 0, 0.12));
+  noAV.material.opacity = kS * 0.9;
+
+  camAnda(t);
+  ETI(t, camera);
+  monitor(t);
   cartoes(t, F, B);
-  legenda(t < F.titulo.fim + 0.4 ? -1 : t, LEG); // na capa o título já está escrito
+  legenda(t < F.titulo.fim + 0.6 ? -1 : t, LEG);
   renderer.render(scene, camera);
 }
 
-ligar('terra-sem-inclinacao', renderAt);
+ligar('coracao-por-dentro', renderAt);

@@ -11,7 +11,8 @@ Fontes lidas em 07/11/2026.
 | F4 | GE9X: ventilador de **134 polegadas (3,4 m)**, "maior que a fuselagem de um Boeing 737". | GE Aerospace, GE9X — https://www.geaerospace.com/commercial/aircraft-engines/ge9x |
 | F5 | GE9X: razão de bypass de **cerca de 10:1** → ~10 vezes mais ar por fora do núcleo do que por dentro (definição de bpr: NASA F2). | GE Aerospace (acima) + NASA Glenn (definição) |
 | F6 | GE9X: razão de pressão total de **60:1** → "até 60 vezes a pressão de entrada". | GE Aerospace (acima) |
-| F7 | Pás de turbina aguentam a temperatura com resfriamento interno + filme de ar ou **revestimento de barreira térmica (cerâmica)**. | NASA TM X-73518 (1976); NASA Glenn TM-2008-215040 (revestimentos cerâmicos para subir a temperatura e reduzir o ar de resfriamento) — https://ntrs.nasa.gov |
+| F8 | GE9X: **16 pás** de compósito no ventilador; "o maior e mais potente motor de avião comercial já construído". | GE Aerospace (acima) |
+| F7 (não usado na voz, cortado por tempo) | Pás de turbina aguentam a temperatura com resfriamento interno + filme de ar ou **revestimento de barreira térmica (cerâmica)**. | NASA TM X-73518 (1976); NASA Glenn TM-2008-215040 (revestimentos cerâmicos para subir a temperatura e reduzir o ar de resfriamento) — https://ntrs.nasa.gov |
 
 ## Deixado de fora
 | Afirmação | Por quê |

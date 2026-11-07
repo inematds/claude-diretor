@@ -6,49 +6,49 @@
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
 <script type="importmap">{ "imports": { "three": "./motor/lib/three.module.min.js" } }</script>
 <link rel="stylesheet" href="motor/reel.css" />
+<link rel="stylesheet" href="js/por-dentro.css" />
 </head>
 <body>
-<div id="root" data-composition-id="main" data-start="0" data-duration="67.97" data-width="1080" data-height="1920">
+<div id="root" data-composition-id="main" data-start="0" data-duration="44.87" data-width="1080" data-height="1920">
   <canvas id="world" width="1080" height="1920"></canvas>
+  <svg id="fios" width="1080" height="1920" viewBox="0 0 1080 1920" aria-hidden="true"></svg>
+  <div id="etis"></div>
 
-  <!-- o aparelho: fica na tela o reel inteiro -->
-  <div id="aparelho">
-    <div class="lbl">INCLINAÇÃO DA TERRA</div>
-    <div class="linha">
-      <div id="ap-num">23,4°</div>
-      <svg viewBox="0 0 100 100" aria-hidden="true">
-        <circle cx="50" cy="50" r="30" fill="#1a2330" stroke="#9cc3e6" stroke-width="3" />
-        <line x1="10" y1="50" x2="90" y2="50" stroke="rgba(156,195,230,.5)" stroke-width="2" stroke-dasharray="5 4" />
-        <g id="ap-eixo" transform="rotate(23.4 50 50)"><line x1="50" y1="6" x2="50" y2="94" stroke="#FACC15" stroke-width="5" stroke-linecap="round" /></g>
-      </svg>
+  <!-- aparelho: monitor do batimento, o reel inteiro -->
+  <div id="monitor">
+    <div class="lbl">BATIMENTO</div>
+    <div class="linha"><span id="mo-bpm">70</span><small>/min</small>
+      <svg viewBox="0 0 200 60" aria-hidden="true"><polyline id="mo-ecg" fill="none" stroke="#FACC15" stroke-width="3" stroke-linejoin="round" points="" /></svg>
     </div>
-    <div class="dia"><span id="ap-dia">DIA 172</span><span id="ap-data">21 JUN</span></div>
+    <div class="cont">neste vídeo: <b id="mo-n">0</b> batidas</div>
   </div>
 
-  <!-- título: quadro 0 (capa) e de novo no fim, para o reel voltar ao começo -->
-  <div class="chamada" data-de="0" data-ate="titulo.fim+0.6" data-sobe="nao"><span class="k">FEITO SÓ COM CÓDIGO</span><h2>Crie vídeos <em>dark</em> de ciência animada</h2><p>explicativos · em 3D · sem aparecer<br>kit grátis no <b style="color:#FACC15">inema.club</b></p></div>
-  <div class="chamada" data-de="volta.fim+0.25" data-ate="99999" data-sobe="nao"><span class="k">FEITO SÓ COM CÓDIGO</span><h2>Crie vídeos <em>dark</em> de ciência animada</h2><p>explicativos · em 3D · sem aparecer<br>kit grátis no <b style="color:#FACC15">inema.club</b></p></div>
-  <div class="titulo" data-de="0" data-ate="titulo.fim+0.6" data-sobe="nao"><h1>E se a Terra não tivesse <em>inclinação?</em></h1></div>
-  <div class="titulo" data-de="volta.fim+0.25" data-ate="99999" data-sobe="nao"><h1>E se a Terra não tivesse <em>inclinação?</em></h1></div>
+  <!-- capa (quadro 0) e volta no fim -->
+  <div class="pd-kicker" data-de="0" data-ate="titulo.fim+0.7" data-sobe="nao">COMO FUNCIONA POR DENTRO · 1</div>
+  <div class="titulo pd-titulo" data-de="0" data-ate="titulo.fim+0.7" data-sobe="nao"><h1>Seu coração<br><em>por dentro</em></h1></div>
+  <div class="pd-kicker" data-de="volta.fim+0.2" data-ate="99999" data-sobe="nao">COMO FUNCIONA POR DENTRO · 1</div>
+  <div class="titulo pd-titulo" data-de="volta.fim+0.2" data-ate="99999" data-sobe="nao"><h1>Seu coração<br><em>por dentro</em></h1></div>
 
-  <!-- números: uma linha curta, só quando a cena precisa; a fonte numa linha pequena -->
-  <div class="dado" style="top:470px" data-de="doze-0.1" data-ate="b2-0.2"><b>≈ 12 h</b> de luz · <b>≈ 12 h</b> de escuro<small>EM QUALQUER LUGAR, O ANO TODO</small></div>
-  <div class="fonte-linha" data-de="sombra+0.6" data-ate="b2-0.2">NASA GODDARD · NWS/NOAA</div>
-  <div class="fonte-linha" data-de="poa+0.6" data-ate="b3-0.2">CÁLCULO · EQUAÇÕES DO NOAA SOLAR CALCULATOR</div>
-  <div class="fonte-linha" data-de="manaus+0.6" data-ate="b4-0.2">CÁLCULO · NOAA SOLAR CALCULATOR</div>
-  <div class="fonte-linha" data-de="ferraz+0.6" data-ate="b5-0.2">MARINHA DO BRASIL (PROANTAR) · CÁLCULO NOAA</div>
-  <div class="dado" style="top:1130px" data-de="janeiro+0.3" data-ate="b6-0.2"><b>+7%</b> de sol<small>TODO JANEIRO · PARA TODO MUNDO</small></div>
-  <div class="fonte-linha" data-de="planeta+0.4" data-ate="b6-0.2">NASA · CICLOS DE MILANKOVITCH</div>
-  <div class="fonte-linha" data-de="polos+0.4" data-ate="b7-0.2">NASA GODDARD</div>
-  <div class="fonte-linha" data-de="jupiter+0.4" data-ate="b8-0.2">NASA · FICHAS DA TERRA E DE JÚPITER</div>
+  <!-- números com fonte -->
+  <div class="dado pd-dado" style="top:330px" data-de="batidas+0.9" data-ate="b2-0.2"><b>≈ 100 mil</b> batidas por dia<small>≈ 7.500 LITROS DE SANGUE POR DIA</small></div>
+  <div class="fonte-linha" data-de="batidas+0.9" data-ate="b2-0.2">TEXAS HEART INSTITUTE</div>
+  <div class="fonte-linha" data-de="camaras+0.5" data-ate="b5-0.2">NHLBI · INSTITUTOS NACIONAIS DE SAÚDE (EUA)</div>
+  <div class="fonte-linha" data-de="valvulas+0.5" data-ate="b6-0.2">NHLBI · "LUB-DUB" = VÁLVULAS FECHANDO</div>
+  <div class="fonte-linha" data-de="sinal+0.4" data-ate="b7-0.2">NHLBI · NÓ SINOATRIAL, NO ÁTRIO DIREITO</div>
+  <div class="pd-som" id="som-tum">TUM</div>
+  <div class="pd-som" id="som-ta">TÁ</div>
+  <div class="pd-nota" data-de="camaras+0.5" data-ate="azul-0.1">VISTA DE FRENTE: O LADO DIREITO FICA À ESQUERDA</div>
+  <div class="pd-nota" data-de="azul+0.2" data-ate="b5-0.2"><i class="az"></i> SEM OXIGÊNIO &nbsp; <i class="vm"></i> COM OXIGÊNIO</div>
+
+  <!-- fecho -->
+  <div class="pd-fecho" data-de="volta" data-ate="volta.fim+0.25" data-sobe="nao"><span class="k">SÉRIE</span><h2>Como funciona<br><em>por dentro</em></h2><p>tem mais no <b>inema.club</b></p></div>
 
   <div id="leg"></div>
-
-  <audio id="som" class="clip" data-start="0" data-duration="67.97" data-track-index="10" data-volume="1" src="audio/terra/final.wav"></audio>
+  <audio id="som" class="clip" data-start="0" data-duration="44.87" data-track-index="10" data-volume="1" src="audio/coracao/final.wav"></audio>
 </div>
 <script>
   const tl = gsap.timeline({ paused: true });
-  tl.to({}, { duration: 67.97 }, 0);
+  tl.to({}, { duration: 44.87 }, 0);
   window.__timelines = window.__timelines || {}; window.__timelines["main"] = tl;
 </script>
 <script type="module" src="js/mundo.js"></script>

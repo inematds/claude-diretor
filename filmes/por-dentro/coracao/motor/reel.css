@@ -1,0 +1,65 @@
+/* Estilo INEMA dos reels "E se…?" — valores do STYLE.md. Fontes locais (sem download na hora do render). */
+@font-face { font-family: Sora; src: url(fontes/Sora.ttf); font-weight: 100 900; }
+@font-face { font-family: Inter; src: url(fontes/Inter-Regular.ttf); font-weight: 400; }
+@font-face { font-family: Inter; src: url(fontes/Inter-Bold.ttf); font-weight: 700; }
+@font-face { font-family: "JetBrains Mono"; src: url(fontes/JetBrainsMono-Bold.ttf); font-weight: 700; }
+@font-face { font-family: Montserrat; src: url(fontes/Montserrat-Black.ttf); font-weight: 900; }
+
+:root {
+  --amarelo: #FACC15; --tinta: #ffffff; --mut: rgba(255,255,255,.78);
+  --painel: rgba(12,12,16,.74); --painel-leve: rgba(12,12,16,.56); --borda: rgba(156,195,230,.30);
+  --linha-ese: #9cc3e6; --trilho: #161c26;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0c0c10; }
+#root { position: relative; width: 100%; height: 100%; overflow: hidden; }
+#world { position: absolute; inset: 0; width: 1080px; height: 1920px; display: block; z-index: 1; }
+
+/* ===== v2 (06/11/2026): a cena explica, o texto só confirma ===== */
+
+/* aparelho pequeno (metade do v1), topo esquerdo */
+#aparelho { position: absolute; left: 56px; top: 180px; padding: 12px 16px 12px; z-index: 5; min-width: 230px;
+  background: rgba(12,12,16,.42); border: 1px solid rgba(156,195,230,.22); border-radius: 12px; color: var(--tinta);
+  font-family: "JetBrains Mono", monospace; font-weight: 700; }
+#aparelho .lbl { font-size: 18px; letter-spacing: .08em; color: var(--mut); }
+#aparelho .linha { display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+#ap-num { font-size: 52px; line-height: 1; color: var(--amarelo); min-width: 150px; }
+#aparelho svg { width: 52px; height: 52px; flex: none; }
+#aparelho .dia { margin-top: 6px; font-size: 18px; letter-spacing: .04em; display: flex; justify-content: space-between; gap: 14px; }
+#ap-data { color: var(--mut); }
+
+/* título solto sobre a cena (sem painel), só sombra */
+.titulo { position: absolute; left: 60px; right: 60px; top: 330px; z-index: 6; text-align: center; opacity: 0; }
+.titulo h1 { font: 800 96px/1.04 Sora, sans-serif; color: #fff; letter-spacing: -.01em;
+  text-shadow: 0 2px 4px rgba(0,0,0,.55), 0 6px 28px rgba(0,0,0,.55); }
+.titulo h1 em { font-style: normal; color: var(--amarelo); }
+
+/* número que precisa de tela: uma linha curta, sem caixa */
+.dado { position: absolute; left: 0; right: 0; text-align: center; z-index: 6; opacity: 0;
+  font: 700 46px/1.15 "JetBrains Mono", monospace; color: #fff; letter-spacing: .02em;
+  text-shadow: 0 2px 4px rgba(0,0,0,.6), 0 4px 18px rgba(0,0,0,.5); }
+.dado b { color: var(--amarelo); font-weight: 700; }
+.dado small { display: block; font: 700 28px/1.3 "JetBrains Mono", monospace; color: rgba(255,255,255,.82); letter-spacing: .06em; }
+
+/* fonte: uma linha pequena acima da legenda */
+.fonte-linha { position: absolute; left: 0; right: 0; top: 1372px; text-align: center; z-index: 6; opacity: 0;
+  font: 700 28px "JetBrains Mono", monospace; letter-spacing: .05em; color: rgba(255,255,255,.72);
+  text-shadow: 0 1px 3px rgba(0,0,0,.8); }
+.fonte-linha::before { content: "◆ "; color: var(--amarelo); }
+
+/* legenda: uma linha, menor, sem contorno pesado */
+#leg { position: absolute; left: 50%; top: 1270px; z-index: 8; width: 980px; text-align: center; opacity: 0;
+  font: 700 58px/1.12 Inter, sans-serif; color: #fff; letter-spacing: -.005em;
+  text-shadow: 0 2px 4px rgba(0,0,0,.75), 0 6px 22px rgba(0,0,0,.55); transform: translateX(-50%); }
+#leg b { color: var(--amarelo); font-weight: 700; }
+
+/* chamada do quadro 0 (06/11/2026): vende a ideia do kit; some junto com o título e volta no fim (loop) */
+.chamada { position: absolute; left: 0; right: 0; top: 1300px; z-index: 7; text-align: center; opacity: 0; padding: 56px 56px 60px;
+  background: linear-gradient(180deg, rgba(12,12,16,0) 0%, rgba(12,12,16,.62) 22%, rgba(12,12,16,.62) 78%, rgba(12,12,16,0) 100%); }
+.chamada .k { display: inline-block; font: 700 30px "JetBrains Mono", monospace; letter-spacing: .12em; color: #0c0c10;
+  background: #FACC15; padding: 8px 18px; border-radius: 8px; }
+.chamada h2 { font: 800 82px/1.04 Sora, sans-serif; color: #fff; letter-spacing: -.01em; margin-top: 22px;
+  text-shadow: 0 2px 4px rgba(0,0,0,.6), 0 6px 24px rgba(0,0,0,.55); }
+.chamada h2 em { font-style: normal; color: #FACC15; }
+.chamada p { font: 700 36px/1.3 Inter, sans-serif; color: rgba(255,255,255,.92); margin-top: 18px;
+  text-shadow: 0 2px 6px rgba(0,0,0,.7); }

@@ -4,20 +4,113 @@
  "intervalo_blocos": 0.4,
  "voz": "nei",
  "tela": {
-  "três metros e quarenta": "3,4 m", "3 metros e 40": "3,4 m", "setecentos e trinta e sete": "737", "737": "737",
-  "dez vezes": "10×", "10 vezes": "10×", "sessenta vezes": "60×", "60 vezes": "60×"
+  "três metros e quarenta": "3,4 m",
+  "3 metros e 40": "3,4 m",
+  "setecentos e trinta e sete": "737",
+  "737": "737",
+  "dez vezes": "10×",
+  "10 vezes": "10×",
+  "sessenta vezes": "60×",
+  "60 vezes": "60×"
  },
- "destaques": ["jato", "ventilador", "fora", "compressor", "combustão", "queima", "turbina", "eixos", "cerâmica", "bocal", "frente", "aspira", "comprime", "sopra"],
+ "destaques": [
+  "jato",
+  "ventilador",
+  "fora",
+  "compressor",
+  "combustão",
+  "queima",
+  "turbina",
+  "eixos",
+  "bocal",
+  "frente",
+  "aspira",
+  "comprime",
+  "sopra",
+  "núcleo",
+  "pressão"
+ ],
  "blocos": [
-  {"id": "b0", "frases": [{"id": "titulo", "texto": "Um motor a jato por dentro."}]},
-  {"id": "b1", "frases": [{"id": "fan", "texto": "Na frente, um ventilador gigante. No GE9X, são três metros e quarenta, mais largo que um Boeing setecentos e trinta e sete."}]},
-  {"id": "b2", "frases": [{"id": "bypass", "texto": "A maior parte do ar passa por fora do núcleo: cerca de dez vezes mais do que entra nele."}]},
-  {"id": "b3", "frases": [{"id": "compressor", "texto": "O resto é espremido pelo compressor, estágio por estágio, até sessenta vezes a pressão de entrada."}]},
-  {"id": "b4", "frases": [{"id": "combustao", "texto": "Na câmara de combustão, o combustível queima nesse ar apertado."}]},
-  {"id": "b5", "frases": [{"id": "turbina", "texto": "O gás quente gira a turbina, e ela gira o compressor e o ventilador por dois eixos, um dentro do outro."}]},
-  {"id": "b6", "frases": [{"id": "pas", "texto": "As pás aguentam esse calor com ar de resfriamento e revestimento de cerâmica."}]},
-  {"id": "b7", "frases": [{"id": "bocal", "texto": "No bocal, o gás sai em alta velocidade, e o avião é empurrado para a frente."}]},
-  {"id": "b8", "frases": [{"id": "pecas", "texto": "Aspira, comprime, queima e sopra. Peça por peça."}]},
-  {"id": "b9", "frases": [{"id": "volta", "texto": "Como funciona por dentro. Tem mais no INEMA.CLUB."}]}
+  {
+   "id": "b0",
+   "frases": [
+    {
+     "id": "titulo",
+     "texto": "Um motor a jato por dentro."
+    }
+   ]
+  },
+  {
+   "id": "b1",
+   "frases": [
+    {
+     "id": "fan",
+     "texto": "Na frente, um ventilador gigante. No maior motor de avião comercial, ele é mais largo que um Boeing setecentos e trinta e sete."
+    }
+   ]
+  },
+  {
+   "id": "b2",
+   "frases": [
+    {
+     "id": "bypass",
+     "texto": "A maior parte do ar passa por fora: cerca de dez vezes mais do que entra no núcleo."
+    }
+   ]
+  },
+  {
+   "id": "b3",
+   "frases": [
+    {
+     "id": "compressor",
+     "texto": "O resto é espremido, estágio por estágio, até sessenta vezes a pressão."
+    }
+   ]
+  },
+  {
+   "id": "b4",
+   "frases": [
+    {
+     "id": "combustao",
+     "texto": "Aí, o combustível queima nesse ar apertado."
+    }
+   ]
+  },
+  {
+   "id": "b5",
+   "frases": [
+    {
+     "id": "turbina",
+     "texto": "O gás quente gira a turbina, e ela gira o compressor e o ventilador por dois eixos, um dentro do outro."
+    }
+   ]
+  },
+  {
+   "id": "b6",
+   "frases": [
+    {
+     "id": "bocal",
+     "texto": "No bocal, o gás sai rápido, e o avião é empurrado para a frente."
+    }
+   ]
+  },
+  {
+   "id": "b7",
+   "frases": [
+    {
+     "id": "pecas",
+     "texto": "Aspira, comprime, queima e sopra. Peça por peça."
+    }
+   ]
+  },
+  {
+   "id": "b8",
+   "frases": [
+    {
+     "id": "volta",
+     "texto": "Como funciona por dentro. Tem mais no INEMA.CLUB."
+    }
+   ]
+  }
  ]
 }
